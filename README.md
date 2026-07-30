@@ -184,7 +184,7 @@ Der Konverter nutzt intelligentes Caching (365 Tage für Wikidata-Übersetzungen
 
 ## 🎨 Design & Themes
 
-Rund 38 abgestimmte Farbthemen mit eigenen Hell- und Dunkelmodus-Varianten (inkl. „Midnight", einem nahezu schwarzen Dark-Theme mit Eisblau-Akzent). Das Marken-Icon links vom Titel sowie das Browser-Tab-Favicon werden als eingebettetes SVG erzeugt und übernehmen automatisch die Akzentfarben des gewählten Themes – ganz ohne externe Bilddateien.
+Rund 38 abgestimmte Farbthemen mit eigenen Hell- und Dunkelmodus-Varianten. Das Icon links vom Titel sowie das Browser-Tab-Favicon werden als eingebettetes SVG erzeugt und übernehmen automatisch die Akzentfarben des gewählten Themes – ganz ohne externe Bilddateien.
 
 ---
 
