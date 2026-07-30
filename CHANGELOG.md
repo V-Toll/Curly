@@ -14,7 +14,6 @@ UI-Modernisierung nach aktuellen Web-Standards (Funktion/Konvertierung unveränd
 - **Barrierefreiheit:** einheitlicher `:focus-visible`-Tastaturfokusring auf allen interaktiven Elementen inklusive der Eingabe-/Ausgabefelder (`:focus-within`); der Fokus liegt beim Laden direkt im Eingabefeld.
 - Sanfter Crossfade beim Theme-Wechsel (View Transitions API, respektiert „reduzierte Bewegung“); dynamisches `<meta name="theme-color">` passend zum Theme (Mobil-Browserleiste); `100dvh` gegen den Viewport-Sprung auf Mobilgeräten; global respektierte `prefers-reduced-motion`; `text-wrap: balance/pretty` für ausgewogenere Umbrüche.
 - Der Versionsverlauf wird nicht mehr komplett in `Cite-Konverter.html` eingebettet, sondern hier in `CHANGELOG.md` gepflegt (das 📜-Fenster zeigt die letzten Einträge und verlinkt hierher) – das reduziert die Dateigröße deutlich.
-- Bewusst **nicht** übernommen: `field-sizing` (würde die Overlay-Editoren desynchronisieren) und Container-Queries (kein Nutzen bei einer Vollbreiten-Ansicht).
 
 ## v11.5.0 “Communiqué” (2026-07-22)
 
