@@ -2,11 +2,15 @@
 <html lang="de">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content="Curly – konvertiert englische Wikipedia-Zitationsvorlagen ({{cite web}}, {{cite news}}, {{cite book}} …) in die passenden deutschen Vorlagen ({{Internetquelle}}, {{Literatur}}, {{Zitat}}). Eine einzige HTML-Datei, ohne Server." />
+<!-- Wird beim Theme-Wechsel dynamisch auf die führende Themefarbe gesetzt (Browser-Chrome auf Mobil). -->
+<meta name="theme-color" id="themeColorMeta" content="#0a0a0a" />
   <!-- Favicon: v9.2 „Sigil" – wird per Skript als eingebettetes SVG erzeugt und
        folgt dem gewählten Theme (siehe Skript am Seitenende). Keine externen Dateien. -->
   <link rel="icon" type="image/svg+xml" id="faviconSvg" />
-<title>Curly – der Cite-Konverter für Wikipedia – v11.5.0</title>
+<title>Curly – der Cite-Konverter für Wikipedia – v11.6.0</title>
 
 <style>
   html{min-height:100%}
@@ -18,7 +22,37 @@
     --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   }
   html,body{min-height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  body{display:flex;justify-content:center;align-items:flex-start;padding:28px;min-height:100vh;transition:var(--transition);background-attachment:fixed;background-size:cover}
+
+  /* v11.6 – UI-Modernisierung -------------------------------------------------
+     #1 Barrierefreiheit: einheitlicher Tastatur-Fokusring auf ALLEN interaktiven
+     Elementen (zuvor nur auf einzelnen). Mausklicks zeigen ihn dank :focus-visible
+     nicht. --th-accent-solid ist eine kräftige, theme-nahe Volltonfarbe für Ringe. */
+  :root{ --focus-ring: #6aa9ff; }
+  a:focus-visible, button:focus-visible, [role="button"]:focus-visible,
+  input:focus-visible, select:focus-visible, textarea:focus-visible,
+  .theme-option:focus-visible, .badge:focus-visible, summary:focus-visible{
+    outline:2px solid var(--focus-ring); outline-offset:2px; border-radius:8px;
+  }
+  /* Editor: der sichtbare Rahmen bekommt den Fokusring, weil das eigentliche
+     <textarea> transparent über dem Highlight liegt (outline dort bewusst aus). */
+  .editor-wrap:focus-within{ outline:2px solid var(--focus-ring); outline-offset:2px; }
+
+  /* #2 Typografie: modernes Zeilenumbruch-Verhalten (keine Waisen, ausgewogene Titel) */
+  h1,h2,h3,.brand-tagline{ text-wrap:balance; }
+  p,.lead,.info,.opt-hint{ text-wrap:pretty; }
+
+  /* #2 Reduzierte Bewegung – global (zuvor nur punktuell). Respektiert die
+     System­einstellung und neutralisiert Transitions/Animationen app-weit. */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
+  }
+  /* #3 Nativer <dialog>: transparenter Vollflächen-Container, sichtbares Panel
+     bleibt .modal-dialog. Backdrop über ::backdrop statt separatem Element. */
+  dialog.modal{ position:fixed; inset:0; width:100%; height:100%; max-width:100%; max-height:100%; margin:0; padding:40px 16px; border:0; background:transparent; color:inherit; overflow-y:auto; }
+  dialog.modal:not([open]){ display:none; }
+  dialog.modal[open]{ display:flex; align-items:flex-start; justify-content:center; }
+  dialog.modal::backdrop{ background:rgba(8,10,20,0.45); backdrop-filter:blur(3px); }
+  body{display:flex;justify-content:center;align-items:flex-start;padding:28px;min-height:100vh;min-height:100dvh;transition:var(--transition);background-attachment:fixed;background-size:cover}
 
   /* Themes */
   body.theme-sunset{background:linear-gradient(135deg,#C250F2 0%,#D76CD9 50%,#D977A5 100%)}
@@ -61,6 +95,8 @@ body.theme-petalbean{background:linear-gradient(135deg,#1B1110 0%,#8a3050 55%,#F
 body.theme-celadonplum{background:linear-gradient(135deg,#553832 0%,#7a9a7a 55%,#A8D3A8 100%)}
 body.theme-crimsonperiwinkle{background:linear-gradient(135deg,#470B24 0%,#8a70aa 55%,#B5BEDD 100%)}
 body.theme-evergreencream{background:linear-gradient(135deg,#143731 0%,#5a9a50 55%,#CEFF8C 100%)}
+/* „Midnight" – nahezu schwarz mit kühlem Eisblau-Akzent (am besten im Dunkelmodus) */
+body.theme-midnight{background:linear-gradient(160deg,#08090B 0%,#0E171C 55%,#08090B 100%)}
 
 
   .wrap{width:100%;max-width:1180px}
@@ -161,13 +197,18 @@ body.dark .segmented button{color:#fff}
   .cl-dialog .modal-head{flex:none}
   .cl-body{flex:1 1 auto;overflow-y:auto}
   .cl-hint{margin:0 0 12px;font-size:12px;opacity:.6}
-  .cl-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
-  .cl-list li{padding:11px 14px;border:1px solid rgba(0,0,0,0.06);border-left:3px solid #7c3aed;border-radius:10px;background:rgba(0,0,0,0.025);font-size:13.5px;line-height:1.55}
-  .cl-list li>strong:first-child{display:block;margin-bottom:2px;color:#6d28d9;font-size:13px;letter-spacing:.01em}
+  /* v11.6: nur die letzten Einträge inline; vollständiger Verlauf in CHANGELOG.md auf GitHub. */
+  .cl-list{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:9px}
+  .cl-list > li{padding:11px 14px;border:1px solid rgba(0,0,0,0.06);border-left:3px solid #7c3aed;border-radius:10px;background:rgba(0,0,0,0.025);font-size:13.5px;line-height:1.5}
+  .cl-list > li > strong:first-child{display:block;margin-bottom:6px;color:#6d28d9;font-size:13px;letter-spacing:.01em}
+  /* v11.6: einzelne Punkte je Eintrag als Aufzählung – besser lesbar als Fließtext */
+  .cl-list ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+  .cl-list ul li{list-style:disc}
   .cl-list code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;padding:1px 6px;border-radius:6px;background:rgba(0,0,0,0.06)}
-  body.dark .cl-list li, body.force-dark .cl-list li{border-color:rgba(255,255,255,0.10);border-left-color:#a78bfa;background:rgba(255,255,255,0.04)}
-  body.dark .cl-list li>strong:first-child, body.force-dark .cl-list li>strong:first-child{color:#c4b5fd}
+  body.dark .cl-list > li, body.force-dark .cl-list > li{border-color:rgba(255,255,255,0.10);border-left-color:#a78bfa;background:rgba(255,255,255,0.04)}
+  body.dark .cl-list > li > strong:first-child, body.force-dark .cl-list > li > strong:first-child{color:#c4b5fd}
   body.dark .cl-list code, body.force-dark .cl-list code{background:rgba(255,255,255,0.12)}
+  a.cl-link{display:block;width:fit-content;max-width:100%;margin:2px auto 0;padding:9px 16px;font-size:13.5px;text-decoration:none;text-align:center}
   @media(prefers-reduced-motion:reduce){ .modal-dialog{animation:none} .icon-btn:hover{transform:none} }
 
   /* Optionen-Steuerelemente (Inhalt des Modals)
@@ -256,6 +297,7 @@ body.dark .segmented button{color:#fff}
   body.theme-celadonplum { --th-accent: linear-gradient(135deg,#553832,#7a9a7a); --th-accent-dark: linear-gradient(135deg,#2a1c18,#3a5a3a); }
   body.theme-crimsonperiwinkle { --th-accent: linear-gradient(135deg,#470B24,#8a70aa); --th-accent-dark: linear-gradient(135deg,#230512,#4a3868); }
   body.theme-evergreencream { --th-accent: linear-gradient(135deg,#143731,#5a9a50); --th-accent-dark: linear-gradient(135deg,#0a1b18,#2a5028); }
+  body.theme-midnight { --th-accent: linear-gradient(135deg,#3E7E9C,#5AA0C4); --th-accent-dark: linear-gradient(135deg,#9DD9E7,#7FC4DD); --th-accent-fg:#fff; --th-accent-fg-dark:#06222c; }
 
 
   /* Input/Output area layout */
@@ -402,7 +444,9 @@ body.dark .segmented button{color:#fff}
 
   /* small responsive */
   @media(max-width:560px){ .swatch{width:48px;height:20px} pre.highlight{font-size:13px} textarea.overlay{font-size:13px} }
-html,body{min-height:100%}
+html{min-height:100%}
+/* v11.6: dvh statt vh gegen den Mobil-Viewport-Sprung (spätere Quelle als oben, gewinnt bewusst). */
+body{min-height:100vh;min-height:100dvh}
 
 /* token styles for highlighting */
 pre.highlight .tok-template{font-weight:800;color:#C250F2}
@@ -488,6 +532,7 @@ body.theme-petalbean h1 .title-text{background:linear-gradient(90deg,#8a3050,#cc
 body.theme-celadonplum h1 .title-text{background:linear-gradient(90deg,#553832,#7a9a7a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 body.theme-crimsonperiwinkle h1 .title-text{background:linear-gradient(90deg,#470B24,#B5BEDD);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 body.theme-evergreencream h1 .title-text{background:linear-gradient(90deg,#143731,#5a9a50);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+body.theme-midnight h1 .title-text{background:linear-gradient(90deg,#9DD9E7,#7FC4DD);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 /* v7.3 H1-Animation */
 body.theme-neontwilight h1 .title-text,
 body.theme-ancientgild h1 .title-text,
@@ -762,6 +807,7 @@ body.theme-petalbean .progress-bar{background:linear-gradient(90deg,#1B1110,#8a3
 body.theme-celadonplum .progress-bar{background:linear-gradient(90deg,#553832,#A8D3A8)}
 body.theme-crimsonperiwinkle .progress-bar{background:linear-gradient(90deg,#470B24,#8a70aa)}
 body.theme-evergreencream .progress-bar{background:linear-gradient(90deg,#143731,#CEFF8C)}
+body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9E7)}
 
   /* ==========================================
      v6.1.5: Sichtbare Selektion (minimal, ohne Layering)
@@ -796,7 +842,7 @@ body.theme-evergreencream .progress-bar{background:linear-gradient(90deg,#143731
 <body class="theme-sunset">
   <div class="wrap">
     <div class="card" role="main" aria-labelledby="heading">
-      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.5.0</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
+      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.6.0</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
       <p class="brand-tagline">der Cite-Konverter für Wikipedia</p>
       <p class="lead">Konvertiert englische Wikipedia-Zitationsvorlagen in die passenden deutschen Vorlagen – inklusive automatischer Wikidata-Übersetzung der Wikilinks, optionaler DeepL-Übersetzung des Fließtexts sowie Subreferenzierung und Syntax-Highlighting.</p>
       <div class="routes" aria-label="Unterstützte Konvertierungen">
@@ -824,7 +870,7 @@ body.theme-evergreencream .progress-bar{background:linear-gradient(90deg,#143731
           <label class="block">Eingabe</label>
           <div class="editor-wrap" id="inputWrap">
             <pre id="inputHighlight" class="highlight" aria-hidden="true"></pre>
-            <textarea id="inputText" class="overlay" placeholder="Hier den &lt;ref&gt;…&lt;/ref&gt; Block oder die {{cite …}}-Vorlage einfügen"></textarea>
+            <textarea id="inputText" class="overlay" autofocus placeholder="Hier den &lt;ref&gt;…&lt;/ref&gt; Block oder die {{cite …}}-Vorlage einfügen"></textarea>
           </div>
           <div id="conversionLog" aria-live="polite" hidden></div>
         </div>
@@ -861,9 +907,8 @@ body.theme-evergreencream .progress-bar{background:linear-gradient(90deg,#143731
     </div>
   </div>
 
-  <div id="optionsModal" class="modal" aria-hidden="true">
-    <div class="modal-backdrop" data-close="1"></div>
-    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="optionsTitle">
+  <dialog id="optionsModal" class="modal" aria-labelledby="optionsTitle">
+    <div class="modal-dialog">
       <div class="modal-head">
         <h2 id="optionsTitle">⚙️ Optionen</h2>
         <button type="button" class="modal-close" id="optionsClose" data-close="1" aria-label="Schließen">✕</button>
@@ -947,16 +992,26 @@ body.theme-evergreencream .progress-bar{background:linear-gradient(90deg,#143731
           </div>
         </div>
         <div class="opt-group">
+          <h3 id="uiLangHeading">Sprache / Language</h3>
+          <div class="option-compact">
+          <label class="inline" for="uiLangSelect" id="uiLangLabel">Oberfläche / Interface:</label>
+          <select id="uiLangSelect" class="opt-input">
+            <option value="auto">Automatisch / Auto</option>
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+          </select>
+          </div>
+        </div>
+        <div class="opt-group">
           <h3>Aktualisierung</h3>
           <label class="inline"><input type="checkbox" id="updateCheck" checked> <span class="info">Beim Start auf neue Version prüfen (GitHub)</span></label>
         </div>
       </div>
     </div>
-  </div>
+  </dialog>
 
-  <div id="themeModal" class="modal" aria-hidden="true">
-    <div class="modal-backdrop" data-close="1"></div>
-    <div class="modal-dialog wide" role="dialog" aria-modal="true" aria-labelledby="themeTitle">
+  <dialog id="themeModal" class="modal" aria-labelledby="themeTitle">
+    <div class="modal-dialog wide">
       <div class="modal-head">
         <h2 id="themeTitle">🎨 Farbschema</h2>
         <button type="button" class="modal-close" data-close="1" aria-label="Schließen">✕</button>
@@ -1000,14 +1055,14 @@ body.theme-evergreencream .progress-bar{background:linear-gradient(90deg,#143731
           <div class="theme-option" data-theme="celadonplum" role="button" tabindex="0"><div class="swatch" style="background:linear-gradient(90deg,#553832,#7a9a7a,#A8D3A8)"></div>Celadon Plum</div>
           <div class="theme-option" data-theme="crimsonperiwinkle" role="button" tabindex="0"><div class="swatch" style="background:linear-gradient(90deg,#470B24,#8a70aa,#B5BEDD)"></div>Crimson Periwinkle</div>
           <div class="theme-option" data-theme="evergreencream" role="button" tabindex="0"><div class="swatch" style="background:linear-gradient(90deg,#143731,#5a9a50,#CEFF8C)"></div>Evergreen Cream</div>
+          <div class="theme-option" data-theme="midnight" role="button" tabindex="0"><div class="swatch" style="background:linear-gradient(90deg,#08090B,#274b59,#9DD9E7)"></div>Midnight</div>
         </div>
       </div>
     </div>
-  </div>
+  </dialog>
 
-  <div id="updateModal" class="modal" aria-hidden="true">
-    <div class="modal-backdrop" data-close="1"></div>
-    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="updateTitle">
+  <dialog id="updateModal" class="modal" aria-labelledby="updateTitle">
+    <div class="modal-dialog">
       <div class="modal-head">
         <h2 id="updateTitle">⬆️ Update verfügbar</h2>
         <button type="button" class="modal-close" data-close="1" aria-label="Schließen">✕</button>
@@ -1021,73 +1076,47 @@ body.theme-evergreencream .progress-bar{background:linear-gradient(90deg,#143731
         <p class="opt-hint">Curly ist eine einzelne HTML-Datei. Lade die neue Version herunter (ZIP), entpacke sie und ersetze damit deine bisherige <code>Cite-Konverter.html</code>. Deine Einstellungen bleiben im Browser gespeichert.</p>
       </div>
     </div>
-  </div>
+  </dialog>
 
-  <div id="changelogModal" class="modal" aria-hidden="true">
-    <div class="modal-backdrop" data-close="1"></div>
-    <div class="modal-dialog wide cl-dialog" role="dialog" aria-modal="true" aria-labelledby="clTitle">
+  <dialog id="changelogModal" class="modal" aria-labelledby="clTitle">
+    <div class="modal-dialog wide cl-dialog">
       <div class="modal-head">
         <h2 id="clTitle">📜 Versionsverlauf</h2>
         <button type="button" class="modal-close" data-close="1" aria-label="Schließen">✕</button>
       </div>
       <div class="modal-body cl-body">
-        <p class="cl-hint">Neueste Version zuerst.</p>
+        <p class="cl-hint">Die letzten Einträge – der vollständige Verlauf steht auf GitHub.</p>
         <ul class="cl-list">
-          <li><strong>v11.5.0 &ldquo;Communiqué&rdquo;</strong> (2026-07-22): Neue Konvertierung <code>{{Cite press release}}</code> → <code>{{Internetquelle}}</code>. Autoren (<code>first/last</code>), Herausgeber (<code>editor-*</code>) und Interviewer (<code>interviewer-*</code>) werden gemeinsam in <code>autor</code> geführt; ein zugehöriger <code>*-link</code>-Parameter verlinkt die Person als Wikilink (<code>[[Ziel|Name]]</code>). <code>publisher</code>/<code>agency</code> → <code>hrsg</code>, <code>work</code> → <code>werk</code>, <code>page</code>/<code>pages</code> → <code>seiten</code>, <code>minutes</code>/<code>time</code>/<code>at</code> → <code>kommentar</code>, <code>quote</code> → <code>zitat</code>. Enthält die Vorlage eine Druck-/Publikations-ID (ISBN, DOI, ISSN, PMID …), wird sie stattdessen als <code>{{Literatur}}</code> aufgebaut (die IDs bleiben erhalten). Außerdem: einheitlich <strong>ein Leerzeichen</strong> nach <code>{{Internetquelle</code> in allen Ausgabepfaden (zuvor entstanden an einigen Stellen zwei).</li>
-          <li><strong>v11.4.3</strong> (2026-07-20): Die „werk“-Ableitung erkennt jetzt deutlich mehr <strong>mehrteilige Länder-Domains</strong>. Die Liste bekannter Second-Level-Kürzel wurde erweitert (u.&nbsp;a. <code>go.jp</code>, <code>ne.jp</code>, <code>gouv.fr</code>, <code>govt.nz</code>, <code>gob.mx</code>, <code>res.in</code>), sodass z.&nbsp;B. <code>www.mext.go.jp</code> → <code>werk=mext.go.jp</code> ergibt (statt <code>go.jp</code>).</li>
-          <li><strong>v11.4.2</strong> (2026-07-20): Korrekturen an der &bdquo;werk&ldquo;-Ableitung aus der URL. <strong>Mehrteilige Länder-Domains</strong> werden jetzt korrekt behandelt (z.&nbsp;B. <code>www.imperial.ac.uk</code> → <code>werk=imperial.ac.uk</code> statt bisher <code>ac.uk</code>; gilt für <code>.ac.uk</code>, <code>.gov.uk</code>, <code>.co.uk</code> u.&nbsp;a.). <strong>BBC-Quellen</strong> erhalten das Werk anhand der Subdomain (<code>news.bbc.co.uk</code>/<code>.com</code> → <code>BBC News</code>, <code>sport.…</code> → <code>BBC Sport</code>, <code>culture.…</code> → <code>BBC Culture</code>; unbekannte/keine Subdomain → <code>BBC</code>). Außerdem wird der Parameter <code>agency=</code> (Nachrichtenagentur) jetzt als <code>hrsg=</code> übernommen (z.&nbsp;B. <code>agency=Imperial College London</code> → <code>hrsg=Imperial College London</code>).</li>
-          <li><strong>v11.4.1</strong> (2026-07-20): Zwei Korrekturen am Update-Abzeichen. Das &bdquo;⬆️ Update&ldquo;-Abzeichen wird jetzt <strong>nur noch angezeigt, wenn tatsächlich eine neuere Version vorliegt</strong> (zuvor hob die <code>.badge</code>-Regel <code>display:inline-block</code> das <code>hidden</code>-Attribut auf, sodass es dauerhaft sichtbar blieb). Außerdem übernimmt das Abzeichen nun die <strong>Akzentfarbe des gewählten Farbschemas</strong> (statt eines festen Orange­tons) und wechselt damit wie das Versions-Abzeichen mit dem Theme.</li>
-          <li><strong>v11.4.0 &ldquo;Beacon&rdquo;</strong> (2026-07-19): Neue <strong>Update-Prüfung</strong>. Curly schaut beim Start (höchstens einmal pro Tag, gedrosselt) über die GitHub-Releases-API nach, ob eine neuere Version vorliegt. Falls ja, erscheint neben der Versionsnummer ein <strong>&bdquo;⬆️ Update&ldquo;-Abzeichen</strong>, das einen Dialog mit direktem Download (ZIP) und Link zu den Release-Notes öffnet. Die Prüfung ist still bei Fehlern/Offline und lässt sich in den Optionen unter <em>Aktualisierung</em> abschalten. Da Curly eine einzelne HTML-Datei ist, ersetzt man die alte Datei einfach durch die heruntergeladene – die Einstellungen bleiben im Browser erhalten.</li>
-          <li><strong>v11.3.0 &ldquo;Locale&rdquo;</strong> (2026-07-18): Erweiterte Sprach­erkennung. Findet die Wortheuristik keine Sprache, wird sie jetzt aus der Domain-Endung der URL abgeleitet (z.&nbsp;B. <code>.uk</code>/<code>.us</code>/<code>.edu</code>/<code>.gov</code>/<code>.au</code> → <code>en</code>; <code>.de</code>/<code>.at</code> → <code>de</code>; <code>.fr</code>/<code>.es</code>/<code>.it</code>/<code>.nl</code> entsprechend). So erhält z.&nbsp;B. eine Quelle von <code>ucl.ac.uk</code> nun <code>sprache=en</code>, auch wenn Titel und Herausgeber keine typischen Signalwörter enthalten. Mehrdeutige Endungen (<code>.com</code>/<code>.org</code>/<code>.net</code>/<code>.ca</code> …) bleiben unbestimmt; eine ausdrückliche Sprachangabe und die Wortheuristik haben weiterhin Vorrang.</li>
-          <li><strong>v11.2.2</strong> (2026-07-18): Code-Review-Korrekturen am Konvertierungs-Log: Ein Hinweis wird jetzt eindeutig seiner <code>&lt;ref&gt;</code> zugeordnet (per Position statt Zählung), sodass „Übernehmen" bei gemischten Referenzen nicht mehr die falsche Vorlage trifft. Auf Referenzen, die per DOI/Crossref angereichert wurden, werden Offline-Umschaltungen nicht mehr angeboten (verhinderte den Verlust der DOI-Daten). Die DOI-Zielformat-Umschaltung arbeitet nun ebenfalls positionsbasiert (robust gegen Reformatierung/doppelte Referenzen). Außerdem: kein leeres <code>|url=</code> mehr, wenn eine <code>{{Citation}}</code> ohne URL nach <code>{{Internetquelle}}</code> umgestellt wird.</li>
-          <li><strong>v11.2.1</strong> (2026-07-17): Farbschema-Auswahl: Lange Theme-Namen (z.&nbsp;B. „Burgundy Champagne") passen jetzt sauber in die Kacheln – etwas kompaktere Schrift und Farbfelder, und auf schmalen Bildschirmen wird die Auswahl einspaltig dargestellt.</li>
-          <li><strong>v11.2.0 &ldquo;Ledger&rdquo;</strong> (2026-07-17): Neues <strong>Konvertierungs-Log</strong> unter dem Eingabefeld. Es zeigt regelbedingte Hinweise – z.&nbsp;B. „Archiv-URL entfernt, weil <code>url-status=live</code>", „<code>sprache=de</code> unterdrückt", „Sprachcode gekürzt" sowie das gewählte Zielformat bei <code>{{Citation}}</code> und bei DOIs (<code>{{Literatur}}</code>/<code>{{Internetquelle}}</code>). Jeder Hinweis ist <strong>anklickbar</strong> und übernimmt die Alternative direkt in die Ausgabe (per „Rückgängig" wieder umschaltbar), ohne die gespeicherten Optionen zu ändern. Der Log leert sich automatisch, sobald das Eingabefeld neuen Inhalt bekommt. Zudem: überflüssige <code>&lt;i&gt;…&lt;/i&gt;</code>-Kursiv-Auszeichnung aus Crossref-Titeln wird beim DOI-Import entfernt (<code>&lt;sub&gt;</code>, <code>&lt;sup&gt;</code> und Entities wie <code>&amp;amp;</code> bleiben erhalten).</li>
-          <li><strong>v11.1.0 &ldquo;Permalink&rdquo;</strong> (2026-07-17): DOI-Konverter erweitert um <strong>Online-/Web-Quellen</strong>: DOIs von web-nativen Inhalten (Preprints/<code>posted-content</code>, Datensätze, Reports, Lexikoneinträge u.&nbsp;a.) werden jetzt als <code>{{Internetquelle}}</code> aufgebaut statt als <code>{{Literatur}}</code> (Journalartikel, Bücher, Buchkapitel, Tagungsbände bleiben <code>{{Literatur}}</code>). Als <code>url</code> wird die echte Artikel-/Landing-Page verwendet (sonst <code>doi.org</code>). Auch bestehende <code>{{Internetquelle}}</code>-Vorlagen mit DOI werden per Crossref um fehlende Felder ergänzt. Neue Option <em>Zielformat bei DOI</em> (Automatisch / immer Literatur / immer Internetquelle), um die Zuordnung selbst zu bestimmen. Außerdem neu: ein kleiner Aufklapp-Block <em>Feedback &amp; Mitwirken</em> unter den Buttons – „Fehler melden" und „Funktion vorschlagen" öffnen ein vorausgefülltes Formular im GitHub-Projekt.</li>
-          <li><strong>v11.0.0 &ldquo;Rosetta&rdquo;</strong> (2026-07-17): Neuer <strong>DOI-Konverter</strong> über die Crossref-API. Enthält eine Referenz einen DOI (als <code>doi.org</code>-Link, in einer Verlags-URL oder als reine <code>10.xxxx/…</code>-Nummer), werden daraus automatisch die vollständigen Angaben geholt und als <code>{{Literatur}}</code> aufgebaut – Autor, Titel, Sammelwerk, Band/Nummer, Datum, Sprache, ISSN/ISBN, Seiten, DOI und Online-Link (Journalartikel, Bücher, Buchkapitel, Tagungsbände). Zwei Optionen (beide standardmäßig aktiv, werden gespeichert): <em>Vorlagenlose DOIs auflösen</em> und <em>{{cite}}-Vorlagen per Crossref ergänzen</em> (füllt fehlende Felder; abweichende Felder werden aufgelistet und lassen sich per Häkchen übernehmen). Ergebnisse werden lokal zwischengespeichert (365 Tage). Alles läuft direkt aus dem Browser – kein Schlüssel, keine CORS-Erweiterung nötig.</li>
-          <li><strong>v10.2.3</strong> (2026-07-10): Endgültig behoben: Nach dem Konvertieren blieb das Ausgabefeld in sichtbaren Tabs ohne farbige Hervorhebung. Ursache war ein alter „Display-Sync"-Notbehelf, der die Hervorhebung zwei Frames nach dem Konvertieren durch reinen Text ersetzte. Er hebt die Ausgabe jetzt korrekt hervor, statt sie zu überschreiben.</li>
-          <li><strong>v10.2.2</strong> (2026-07-10): Behoben: Nach dem Konvertieren fehlte im Ausgabefeld manchmal die farbige Syntaxhervorhebung (erst nach dem Neuladen sichtbar). Ursache war die Bündelung über <code>requestAnimationFrame</code>, die in nicht sichtbaren Tabs hängen bleiben konnte. Das Ausgabe-Highlighting wird jetzt direkt aktualisiert.</li>
-          <li><strong>v10.2.1</strong> (2026-07-10): Behoben bei <code>{{cite news}}</code>/<code>{{cite magazine}}</code>: Der Parameter <code>newspaper</code> bzw. <code>magazine</code>/<code>periodical</code> wird jetzt korrekt als <code>werk</code> übernommen (z. B. <code>newspaper=BBC News</code> → <code>werk=BBC News</code> statt „BBC" aus dem Domain-Namen). Dadurch wird auch die Sprache zuverlässiger erkannt (z. B. <code>sprache=en</code>).</li>
-          <li><strong>v10.2.0 &ldquo;Control Panel&rdquo;</strong> (2026-07-09): Das Optionen-Fenster wurde modernisiert – die Gruppen erscheinen als abgesetzte Karten, jede Zeile hat einen Hover-Effekt, und die Kontrollkästchen sind jetzt moderne Umschalter (Toggle-Switches) im Akzent-Verlauf des gewählten Themes. Funktion und Optionen sind unverändert.</li>
-          <li><strong>v10.1.3</strong> (2026-07-09): Mehr Abstand zwischen den Routen-Pills und dem Eingabefeld; die Feldbeschriftungen „Eingabe"/„Ausgabe" erscheinen jetzt als moderne, versale Labels mit kleinem Akzent-Punkt im Theme-Verlauf.</li>
-          <li><strong>v10.1.2</strong> (2026-07-09): Mehr Abstand zwischen den Eingabe-/Ausgabe-Feldern und den darunterliegenden Knöpfen im Zwei-Spalten-Layout. Der Hinweis „Citation ohne Seitenangabe …" wurde entfernt.</li>
-          <li><strong>v10.1.1</strong> (2026-07-09): Feinschliff der Kopfzeile – der Untertitel „der Cite-Konverter für Wikipedia" erscheint jetzt als versale, gesperrte Zeile im Akzent-Verlauf des Themes; das Versions-Abzeichen wurde etwas verkleinert.</li>
-          <li><strong>v10.1.0 &ldquo;Twin View&rdquo;</strong> (2026-07-09): Auf großen Bildschirmen (ab 900&nbsp;px Breite) stehen Eingabe- und Ausgabefeld jetzt nebeneinander, mit einem kompakten <code>🔀</code>-Knopf dazwischen – so lässt sich Original und Ergebnis direkt vergleichen. Auf schmalen Bildschirmen bleibt der gewohnte, gestapelte Aufbau mit dem voll­breiten Knopf „🔀 Konvertieren". Die Einleitung/Beschreibung nutzt nun die volle Breite und wirkt so im breiteren Layout ausgewogener.</li>
-          <li><strong>v10.0.0 &ldquo;Namesake&rdquo;</strong> (2026-07-08): Rebranding – das Tool heißt jetzt <strong>Curly</strong>. Das Klammern-Icon <code>{ }</code> dient als Markenzeichen; darunter steht der Untertitel &bdquo;der Cite-Konverter für Wikipedia&ldquo;. Funktion und Bedienung bleiben unverändert; angepasst wurden Kopfzeile, Seitentitel, README und Projektbeschreibung.</li>
-          <li><strong>v9.2.0 &ldquo;Sigil&rdquo;</strong> (2026-07-08): Neues Marken-Icon – ein Logo mit geschweiften Klammern <code>{ }</code> (Vorlagen-Syntax) auf einem Verlaufs-Quadrat erscheint links vom Titel. Der Verlauf übernimmt automatisch die Akzentfarben des gewählten Themes (im Dunkelmodus die dunkle Variante) und passt sich damit allen Farbschemata an. Auch das Browser-Tab-Favicon wird als passendes SVG erzeugt und wechselt beim Theme-Wechsel mit. Die bisherigen externen Favicon-Dateien (PNG/ICO/Apple-Touch im Ordner <code>grafiken/</code>) werden dadurch nicht mehr benötigt und wurden entfernt.</li>
-          <li><strong>v9.1.1</strong> (2026-07-06): Blockquote-Korrektur – steht die Fußnote <em>innerhalb</em> der Vorlage direkt hinter dem Zitat (z. B. <code>{{blockquote|… Text.&lt;ref name="x" /&gt;}}</code>), wird sie nun korrekt in <code>|ref=</code> übernommen und aus dem <code>Text</code> entfernt. Zuvor blieb <code>Text</code> leer, weil das <code>=</code> in <code>name="x"</code> fälschlich als Parametertrenner gedeutet wurde. Positionaler Zitattext mit einem <code>=</code> bleibt jetzt allgemein erhalten.</li>
-          <li><strong>v9.1.0 &ldquo;Verbatim&rdquo;</strong> (2026-07-06): Neue Vorlage <code>{{blockquote}}</code> (auch <code>{{Blockquote}}</code> und der Alias <code>{{quote}}</code>) wird in die deutsche Vorlage <code>{{Zitat}}</code> umgewandelt. Der Zitattext wird aus dem ersten Parameter bzw. <code>text=</code> übernommen; ein enthaltenes <code>{{lang|xx|…}}</code> wird entpackt und liefert zugleich die <code>Sprache</code> (sonst automatische Erkennung, Standard <code>en</code>). Bei <code>multiline=yes</code> werden Zeilen mit <code>&lt;br /&gt;</code> verbunden. <code>author=</code> wird zu <code>Autor</code>, <code>title=</code> und <code>source=</code> werden zu <code>Quelle</code> zusammengeführt (<code>"Titel" - Quelle</code>). Ein direkt hinter der Vorlage stehendes <code>&lt;ref&gt;…&lt;/ref&gt;</code> (oder <code>&lt;ref … /&gt;</code>) wird in <code>|ref=</code> eingezogen; sonst bleibt ein leerer Platzhalter. <code>Übersetzung</code> bleibt leer.</li>
-          <li><strong>v9.0.2</strong> (2026-06-18): Übersetzung – Wiki-Kursiv/Fett (<code>''…''</code>, <code>'''…'''</code>) bleibt erhalten. Ein entlinkter Werktitel ohne deutschen Artikel (z. B. <code>''A Blank on the Map''</code>) wird nicht mehr von DeepL in Anführungszeichen umgewandelt, sondern bleibt kursiv.</li>
-          <li><strong>v9.0.1</strong> (2026-06-18): Feinschliff der DeepL-Übersetzung – das von DeepL eingefügte Leerzeichen vor <code>&lt;ref&gt;</code> wird wieder entfernt (<code>an. &lt;ref&gt;</code> → <code>an.&lt;ref&gt;</code>), und die von DeepL um Wikilinks gesetzten deutschen Anführungszeichen werden entfernt (<code>&bdquo;[[Tansania]]&ldquo;</code> → <code>[[Tansania]]</code>).</li>
-          <li><strong>v9.0 &ldquo;Polyglot&rdquo;</strong> (2026-06-18): Optionale Übersetzung der Ausgabe über DeepL. In den Optionen lässt sich ein DeepL-API-Key hinterlegen (nur lokal im Browser gespeichert, bleibt nach dem Schließen erhalten) sowie die Zielsprache wählen. Der neue Button &bdquo;🌐 Übersetzen (DeepL)&ldquo; übersetzt nur den Fließtext – <code>&lt;ref&gt;…&lt;/ref&gt;</code> und Wikilinks <code>[[…]]</code> bleiben unverändert. Hinweis: Als lokale Datei verlangt der direkte DeepL-Aufruf eine CORS-Erweiterung (z. B. &bdquo;CORS Unblock&ldquo;), die nur während der Übersetzung aktiv sein sollte; der Schlüssel wird ausschließlich direkt an DeepL gesendet.</li>
-          <li><strong>v8.8 &ldquo;Chronik&rdquo;</strong> (2026-06-18): Der Versionsverlauf steht nicht mehr als Aufklapp-Block am Seitenende, sondern öffnet sich (wie Optionen und Farbschema) über ein eigenes Symbol (📜) – ebenso per Klick auf das Versions-Abzeichen. Die Einträge sind als aufgeräumte, klar gegliederte Liste mit hervorgehobener Versionsnummer dargestellt; Schließen per ✕, Klick außerhalb oder Esc. Außerdem wurde der Verlauf selbst konsolidiert: viele kleinteilige Patch-Einträge (u.&nbsp;a. vierstellige Versionen wie <code>v4.0.0.1</code>) wurden zu ihren Hauptversionen zusammengefasst.</li>
-          <li><strong>v8.7 &ldquo;Palette&rdquo;</strong> (2026-06-18): Das Farbschema öffnet jetzt (wie die Optionen) über ein eigenes Symbol (🎨) ein Modal, statt als Aufklapp-Block unten zu stehen. Außerdem behoben: Der Klammerzusatz in Wikilinks (z. B. <code>(television executive)</code> in <code>[[Michael Peacock (television executive)|Michael Peacock]]</code>) wurde fälschlich kursiv dargestellt – er erscheint nun normal grün wie der übrige Wikilink.</li>
-          <li><strong>v8.6 &ldquo;Optionen-Modal&rdquo;</strong> (2026-06-18): Die Seitenleiste wurde durch ein Optionen-Fenster ersetzt. Ein Zahnrad-Symbol (⚙️) oben rechts öffnet ein übersichtliches Modal mit den gewohnten Gruppen (Konvertierung, Wikilinks, Ausgabe, Darstellung); Schließen per ✕, Klick außerhalb oder Esc. Der Konverter nutzt damit wieder die volle Breite. Funktion und Optionen sind unverändert.</li>
-          <li><strong>v8.5 &ldquo;Sidebar&rdquo;</strong> (2026-06-18): Layout aufgeräumt. Die Einstellungen stehen jetzt als gegliederte Seitenleiste rechts neben dem Konverter (Gruppen: Konvertierung, Wikilinks, Ausgabe, Darstellung) statt in einem aufklappbaren Block darüber. Das Farbschema ist ein eigener Aufklapp-Block, und der Einleitungstext zeigt die unterstützten Konvertierungen kompakt als „Routen“. Auf schmalen Bildschirmen rutscht die Seitenleiste unter den Konverter. Funktion und Optionen sind unverändert.</li>
-          <li><strong>v8.4 &ldquo;Emphasis&rdquo;</strong> (2026-06-18): Wiki-Formatierung im Syntax-Highlighting. Text in <code>''…''</code> wird jetzt kursiv, Text in <code>'''…'''</code> fett dargestellt – passend zur Wikitext-Syntax. Die Formatierung umfasst auch enthaltene Wikilinks (z. B. <code>'''[[Snooker|Snookie]]'''</code> wird fett und bleibt grün). Die Apostrophe bleiben als Quelltext sichtbar; einzelne Apostrophe in Wörtern wie „public&rsquo;s&ldquo; werden nicht verändert.</li>
-          <li><strong>v8.3 &ldquo;Clean Read&rdquo;</strong> (2026-06-18): Jahreszahlen werden nicht mehr farblich hervorgehoben – sie erscheinen als normaler Text (schwarz im Fließtext, grau innerhalb von Referenzen); verschachtelte Tokens in Wikilinks erben die grüne Farbe. Behoben: Die graue Färbung der Referenz-Inhalte lief zuvor über das schließende <code>&lt;/ref&gt;</code> hinaus, sodass nachfolgender Fließtext grau blieb.</li>
-          <li><strong>v8.2 &ldquo;Swift Current&rdquo;</strong> (2026-06-17): Deutlich schnellere Wikilink-Übersetzung über Wikidata – statt bis zu drei einzelner, nacheinander ausgeführter API-Aufrufe pro Artikel werden die Titel jetzt gebündelt in wenigen Aufrufen abgefragt. Intern: Die Button-/Badge-Farben der Themes laufen nun über CSS-Variablen statt über viele wiederholte Regeln.</li>
-          <li><strong>v8.1 &ldquo;Prismatic Links&rdquo;</strong> (2026-06-17): Wikilinks – <code>[[Ziel]]</code> und <code>[[Ziel|Anzeige]]</code> – werden in der Syntaxhervorhebung jetzt in einer eigenen Farbe (Grün) dargestellt; zuvor erschienen sie wie normaler Text. Zusätzlich wurde die gesamte Farbpalette der Hervorhebung vereinheitlicht und für bessere Lesbarkeit und Kontrast optimiert – getrennt abgestimmt für Hell- und Dunkelmodus (Vorlagenname, Klammern, Parameter, Werte, URLs, <code>&lt;ref&gt;</code>, Zahlen/Datum und Kommentare).</li>
-          <li><strong>v8.0 &ldquo;Citation Horizon&rdquo;</strong> (2026-06-01): Neue Vorlage <code>{{Citation}}</code> – Konvertierung in <code>{{Literatur}}</code> (mit Seitenangabe oder ohne URL) oder <code>{{Internetquelle}}</code> (ohne Seitenangabe, mit URL). Folgekorrekturen (06-17): Syntax-Hervorhebung pro Frame gebündelt (<code>requestAnimationFrame</code>, weniger Neu-Rendern); &bdquo;Alles markieren&ldquo; (⌘/Strg&nbsp;+&nbsp;A) markiert nun den gesamten Text auch sichtbar.</li>
-          <li><strong>v7.1 – v7.3 &ldquo;Chromatic Bloom / Earthen Glow / Velvet Garden&rdquo;</strong> (2026-03-30): Insgesamt 29 neue Farbthemen in drei Paketen (u.&nbsp;a. Celestial, Daffodil, Misty Lavender, Vibrant Amber, Crimson Tide, Rustic Sienna, Terracotta Sunset, Coral Horizon, Neon Twilight, Dark Orchid Vine, French Celadon …), jeweils mit abgestimmten H1-, Button- und Badge-Farben sowie Darkmode-Varianten.</li>
-          <li><strong>v7.0 "The Redirection"</strong> (2025-12-20): Wikipedia-Redirects werden automatisch befolgt – Englische Wikilinks mit Redirects (z.B. <code>[[Eastern Band Cherokee]]</code> → <code>[[Eastern Band of Cherokee Indians]]</code>) werden erkannt und der finale Artikel wird zur deutschen Übersetzung verwendet. Button umbenannt: "🔀 Konvertieren". Progress Bar zeigt jetzt auch die Anzahl der aufgelösten Redirects. Separater Redirect-Cache für bessere Performance beim erneuten Konvertieren.</li>
-          <li><strong>v6.0 "Welcome to Wikidata"</strong> (2025-12-10): Wikidata-Integration – Englische Wikilinks werden automatisch in deutsche übersetzt (z.B. <code>[[Yellowstone National Park]]</code> → <code>[[Yellowstone-Nationalpark]]</code>). Features: Checkbox "Wikilinks → Deutsch (Wikidata)" (optional), "Display-Namen beibehalten" (standardmäßig aktiv), "Klammern entfernen bei fehlendem deutschen Artikel" (standardmäßig aktiv), Progress Bar zeigt Fortschritt bei mehreren Links, Cache (365 Tage), Rate Limiting (100ms zwischen API-Calls).</li>
-          <li><strong>v5.0</strong> (2025-12-09): Neue Funktion: Subreferenzierung – <code>{{rp|...}}</code> wird automatisch in <code>details=</code>-Attribut konvertiert (z.B. <code>{{rp|10–20}}</code> → <code>details="S. 10–20"</code>). Mehrere <code>{{rp}}</code> werden zusammengeführt. Bindestriche werden zu Bistrich normalisiert. Option standardmäßig aktiviert.</li>
-          <li><strong>v4.4 – v4.4.3</strong> (2025-09-11 – 11-26): Kleinere Fehlerkorrekturen (doppelte Leerzeichen, fehlende Zitat-Konvertierungen, Parameter-Reihenfolge in <code>{{Literatur}}</code>); Archiv-Parameter-Logik korrigiert (<code>archiveurl</code>/<code>archivedate</code> werden nur bei aktiver URL entfernt); Intro aktualisiert.</li>
-          <li><strong>v4.1 – v4.3.5</strong> (2025-09-08 – 09-10): <code>{{Internetquelle}}</code> verfeinert – feste Parameter-Reihenfolge, gekürzte Sprachcodes (z.&nbsp;B. <code>en-US</code> → <code>en</code>), Mapping <code>website</code>→<code>werk</code> und <code>publisher</code>→<code>hrsg</code>, Domain-Fallback für &bdquo;werk&ldquo; inkl. Auto-Mapping (z.&nbsp;B. nytimes.com → The New York Times), Titel-Normalisierung um Gedankenstriche; stabileres Rebinding von Highlight und Konvertieren.</li>
-          <li><strong>v4.0 – v4.0.10</strong> (2025-09-05 – 09-06): Neue Vorlage <code>{{cite encyclopedia}}</code> → <code>{{Literatur}}</code> (Autor/Hrsg/Sammelwerk/Band/Verlag/Datum/IDs/Seiten). Zahlreiche Folgekorrekturen am Encyclopedia-Mapping, Parser-Fix für verschachtelte Templates (<code>{{google books}}</code>), Fix für doppelte Leerzeichen nach &bdquo;<code>{{Internetquelle</code>&ldquo;, Darkmode-Beschriftung weiß.</li>
-          <li><strong>v3.0 – v3.0.3</strong> (2025-09-03 – 09-05): Neue Vorlage <code>{{cite journal}}</code> → <code>{{Literatur}}</code> (Autoren/Editoren, Datum, Sammelwerk/Band/Nummer, Seiten, IDs, Zitat). Dispatcher- und Builder-Korrekturen, cite-web-Bugfixes (robuste Aliase, <code>toISODate</code> statt nicht definierter Funktion); Dev-Smoke-Test-Modus (<code>?test=1</code>).</li>
-          <li><strong>v2.5.1 – v2.5.19.1</strong> (2025-08-31 – 09-01): Verfeinerungen – Darkmode-Optionen (Automatisch / An / Aus) und durchgängig bessere Kontraste, animierter H1-Verlauf, neue Themes (Simple, Spice, Jade Fruit, Hacker), verlustfrei neu aufgebauter Highlighter (Vorlagenname und Leerzeichen vor der ersten Pipe korrekt, Zeilenumbruch aktiv), responsives Theme-Grid (max.&nbsp;4 Spalten) und diverse Anzeige-Fixes.</li>
-          <li><strong>v2.5</strong> (2025-08-30): Syntax-Highlighting für Eingabe & Ausgabe; verständliche Konvertierungs-Zusammenfassung; Design & Konvertierungsskript unberührt.</li>
-          <li><strong>v2.4 – v2.4.7</strong> (2025-08-29 – 08-30): Redesign mit modernem Glasmorphism-UI. Robuste Konvertierungslogik integriert, animierter Copy-Button, Theme-Wechsel mit Darkmode-Varianten pro Theme, erweiterte Sprachheuristik (Flaggen, Info-Icon); diverse Bugfixes (Erkennung von cite web/news/magazine/book auch mit Parametern).</li>
-          <li><strong>v2.3</strong> (2025-08-28): Neues Theme-System (4 Designs mit LocalStorage), Optionen erweitert (Sprachcodes ungekürzt, Direktkopie, Info-Hinweis per Klick), kleinere Textareas, Favicon gefixt. Neueste Version oben gelistet.</li>
-          <li><strong>v2.2</strong> (2025-08-28): Einstellungsmenü in <code>details</code>-Block; neue Checkbox „Sprache=de unterdrücken“.</li>
-          <li><strong>v2.1 – v2.1.2</strong> (2025-08-28): ISBN-Gruppierung und strengere Sprachheuristik; Normalisierung der Sprachcodes (Deutsch wird unterdrückt) und Info-Hinweis zu <code>Sprache=de</code>.</li>
-          <li><strong>v2.0</strong> (2025-08-28): Neue Konvertierung {{cite book}} → {{Literatur}}.</li>
-          <li><strong>v1.0</strong> (2025-04-2): Erste Version.</li>
+          <li><strong>v11.6.0 &ldquo;Lucid&rdquo; · 2026-07-30</strong>
+            <ul>
+              <li>UI-Modernisierung nach aktuellen Web-Standards.</li>
+              <li>Neues Farbschema <strong>„Midnight"</strong>.</li>
+              <li>Oberfläche jetzt auch auf <strong>Englisch</strong> (automatisch nach Systemsprache, in den Optionen unter <em>Sprache / Language</em> umstellbar) – <strong>konvertiert wird weiterhin nur Englisch → Deutsch</strong>, nicht umgekehrt.</li>
+              <li>Fenster nutzen das native <code>&lt;dialog&gt;</code>-Element (Fokus-Falle, inerter Hintergrund, Esc-zu-schließen).</li>
+              <li>Einheitliche Tastatur-Fokusringe; Fokus liegt beim Laden im Eingabefeld.</li>
+              <li>Sanfter Theme-Wechsel (View Transitions), <code>theme-color</code> auf Mobil, <code>100dvh</code>, global respektierte „reduzierte Bewegung".</li>
+            </ul>
+          </li>
+          <li><strong>v11.5.0 &ldquo;Communiqué&rdquo; · 2026-07-22</strong>
+            <ul>
+              <li>Neue Konvertierung <code>{{Cite press release}}</code> → <code>{{Internetquelle}}</code>.</li>
+              <li>Autoren (<code>first/last</code>), Herausgeber (<code>editor-*</code>) und Interviewer (<code>interviewer-*</code>) werden gemeinsam in <code>autor</code> geführt; ein zugehöriger <code>*-link</code>-Parameter verlinkt die Person als Wikilink (<code>[[Ziel|Name]]</code>).</li>
+              <li>Feldzuordnung: <code>publisher</code>/<code>agency</code> → <code>hrsg</code>, <code>work</code> → <code>werk</code>, <code>page</code>/<code>pages</code> → <code>seiten</code>, <code>minutes</code>/<code>time</code>/<code>at</code> → <code>kommentar</code>, <code>quote</code> → <code>zitat</code>.</li>
+              <li>Druck-/Publikations-ID (ISBN, DOI, ISSN, PMID …) → stattdessen <code>{{Literatur}}</code> (die IDs bleiben erhalten).</li>
+              <li>Einheitlich <strong>ein Leerzeichen</strong> nach <code>{{Internetquelle</code> in allen Ausgabepfaden (zuvor entstanden an einigen Stellen zwei).</li>
+            </ul>
+          </li>
+          <li><strong>v11.4.3 · 2026-07-20</strong>
+            <ul>
+              <li>Die „werk“-Ableitung erkennt jetzt deutlich mehr <strong>mehrteilige Länder-Domains</strong>.</li>
+              <li>Liste bekannter Second-Level-Kürzel erweitert (u.&nbsp;a. <code>go.jp</code>, <code>ne.jp</code>, <code>gouv.fr</code>, <code>govt.nz</code>, <code>gob.mx</code>, <code>res.in</code>) – z.&nbsp;B. <code>www.mext.go.jp</code> → <code>werk=mext.go.jp</code> (statt <code>go.jp</code>).</li>
+            </ul>
+          </li>
         </ul>
+        <a id="clFullLink" class="btn-main cl-link" href="https://github.com/V-Toll/Cite-Konverter-Wikipedia/blob/main/CHANGELOG.md" target="_blank" rel="noopener">📜 Vollständiger Verlauf auf GitHub</a>
       </div>
     </div>
-  </div>
+  </dialog>
 
 <script>
 // Reihenfolge für {Literatur}
@@ -3156,10 +3185,33 @@ function highlightTemplateText(text){
     // theme selection (unchanged logic)
     const themeOptions = Array.from(document.querySelectorAll('.theme-option'));
     function clearThemeClasses(){ Array.from(document.body.classList).forEach(c=>{ if(c.startsWith('theme-')) document.body.classList.remove(c); }); }
+    // v11.6: setzt <meta name="theme-color"> auf die führende Themefarbe (Mobil-Chrome).
+    function updateThemeColor(){
+      try{
+        var mc = document.getElementById('themeColorMeta'); if(!mc) return;
+        var bgi = getComputedStyle(document.body).backgroundImage || '';
+        var m = bgi.match(/rgba?\([^)]+\)/);
+        var solid = m ? m[0] : (getComputedStyle(document.body).backgroundColor || '#0a0a0a');
+        mc.setAttribute('content', solid);
+      }catch(e){}
+    }
     function setTheme(name, persist=true){
-      clearThemeClasses();
-      if(name) document.body.classList.add('theme-'+name);
-      themeOptions.forEach(el=>el.classList.toggle('active', el.dataset.theme===name));
+      var apply = function(){
+        clearThemeClasses();
+        if(name) document.body.classList.add('theme-'+name);
+        themeOptions.forEach(el=>el.classList.toggle('active', el.dataset.theme===name));
+        updateThemeColor();
+      };
+      // v11.6 (#4): View Transitions – sanfter Crossfade beim Theme-Wechsel.
+      // Nur bei echtem Nutzerwechsel (nicht beim Erst-Anwenden) und ohne
+      // „reduzierte Bewegung"; sonst normaler, sofortiger Wechsel.
+      var isInitial = !Array.from(document.body.classList).some(c=>c.startsWith('theme-'));
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(!isInitial && !reduce && typeof document.startViewTransition === 'function'){
+        document.startViewTransition(apply);
+      } else {
+        apply();
+      }
       if(persist) localStorage.setItem('theme', name);
     }
     themeOptions.forEach(el=>{
@@ -3921,18 +3973,179 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
 </script>
 
 <script>
+/* v11.6: Fokus initial ins Eingabefeld; Routen-Pills sind reine Doku-Links und
+   werden aus der Tab-Reihenfolge genommen (mit der Maus weiterhin anklickbar). */
 (function(){
   function init(){
-    var lastFocus = null;
-    function openModal(modal){ if(!modal) return; lastFocus = document.activeElement; modal.classList.add("is-open"); modal.setAttribute("aria-hidden","false"); var f = modal.querySelector("input,select,button"); if(f) f.focus(); }
-    function closeModal(modal){ modal.classList.remove("is-open"); modal.setAttribute("aria-hidden","true"); if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} } }
+    try{ document.querySelectorAll('.routes a').forEach(function(a){ a.tabIndex = -1; }); }catch(e){}
+    var inp = document.getElementById('inputText');
+    if(inp){ try{ inp.focus(); }catch(e){} }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
+<script>
+/* v11.6 „Lucid" – UI-Sprache (Deutsch/English).
+   Deutsch ist die Quellsprache im HTML; Englisch wird bei Bedarf per JS gesetzt.
+   Betrifft NUR die Oberfläche – die Konvertierung bleibt ausschließlich EN→DE.
+   Auto-Erkennung über navigator.language, manuell in den Optionen umstellbar.
+   Der Versionsverlauf (historische Einträge) und die einzelnen Log-Regelhinweise
+   bleiben bewusst deutsch. */
+(function(){
+  function q(s){ return document.querySelector(s); }
+  function qa(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+  // Setzt Text/HTML/Attribut und merkt sich beim ersten Mal den deutschen Originalwert.
+  function T(el, en, lang){ if(!el) return; if(el.__deT==null) el.__deT=el.textContent; el.textContent = (lang==='en'&&en!=null)?en:el.__deT; }
+  function H(el, en, lang){ if(!el) return; if(el.__deH==null) el.__deH=el.innerHTML; el.innerHTML = (lang==='en'&&en!=null)?en:el.__deH; }
+  function A(el, attr, en, lang){ if(!el) return; var k='__deA_'+attr; if(el[k]==null) el[k]=el.getAttribute(attr)||''; el.setAttribute(attr, (lang==='en'&&en!=null)?en:el[k]); }
+  function info(id){ var i=document.getElementById(id); return i && i.closest('label') ? i.closest('label').querySelector('.info') : null; }
+
+  function applyLang(lang){
+    document.documentElement.lang = lang;
+
+    // Kopf / Einleitung
+    T(q('.brand-tagline'), 'the citation converter for Wikipedia', lang);
+    T(q('.lead'), 'Converts English Wikipedia citation templates into the matching German templates – including automatic Wikidata translation of wikilinks, optional DeepL translation of the running text, sub-referencing and syntax highlighting.', lang);
+    A(q('.routes'), 'aria-label', 'Supported conversions', lang);
+    A(document.getElementById('versionBadge'), 'title', 'Version history', lang);
+    A(document.getElementById('updatePill'), 'title', 'Update available', lang);
+    A(document.getElementById('themeBtn'), 'aria-label', 'Open color theme', lang); A(document.getElementById('themeBtn'), 'title', 'Color theme', lang);
+    A(document.getElementById('optionsBtn'), 'aria-label', 'Open options', lang); A(document.getElementById('optionsBtn'), 'title', 'Options', lang);
+    A(document.getElementById('changelogBtn'), 'aria-label', 'Open version history', lang); A(document.getElementById('changelogBtn'), 'title', 'Version history', lang);
+
+    // Ein-/Ausgabe
+    var ioLabels = qa('.io-pane > label.block'); T(ioLabels[0], 'Input', lang); T(ioLabels[1], 'Output', lang);
+    A(document.getElementById('inputText'), 'placeholder', 'Paste the <ref>…</ref> block or the {{cite …}} template here', lang);
+    T(q('#convertBtn .conv-label'), ' Convert', lang); A(document.getElementById('convertBtn'), 'title', 'Convert', lang); A(document.getElementById('convertBtn'), 'aria-label', 'Convert', lang);
+    T(document.getElementById('copyBtn'), '📋 Copy to clipboard', lang);
+    T(document.getElementById('translateBtn'), '🌐 Translate (DeepL)', lang);
+    A(document.getElementById('translateBtn'), 'title', 'Translate the plain text via DeepL (refs/wikilinks stay unchanged)', lang);
+
+    // Feedback
+    T(q('.feedback > summary'), '💬 Feedback & contribute', lang);
+    T(document.getElementById('reportBugLink'), '🐞 Report a bug', lang);
+    T(document.getElementById('requestFeatureLink'), '💡 Suggest a feature', lang);
+    T(q('.feedback-body a:last-child'), '📦 Project on GitHub', lang);
+
+    // Fenster-Titel + Schließen
+    T(document.getElementById('optionsTitle'), '⚙️ Options', lang);
+    T(document.getElementById('themeTitle'), '🎨 Color theme', lang);
+    T(document.getElementById('clTitle'), '📜 Version history', lang);
+    T(document.getElementById('updateTitle'), '⬆️ Update available', lang);
+    T(q('.cl-hint'), 'The latest entries – the full history is on GitHub.', lang);
+    T(document.getElementById('clFullLink'), '📜 Full history on GitHub', lang);
+    qa('.modal-close').forEach(function(b){ A(b, 'aria-label', 'Close', lang); });
+
+    // Optionen – Gruppenüberschriften (Reihenfolge stabil)
+    var headEN = ['Conversion','Wikilinks (Wikidata)','DOI (Crossref)','Output','Translation (DeepL)','Appearance','Language','Update'];
+    qa('#optionsModal .opt-group > h3').forEach(function(h,i){ T(h, headEN[i], lang); });
+
+    // Optionen – Info-Texte (HTML wg. <code>)
+    H(info('useTodayAbruf'), 'Set access date automatically to today', lang);
+    H(info('stripArchiveIfLive'), 'Remove archive parameters when the URL is live (<code>url-status=live</code>)', lang);
+    H(info('convertSubref'), 'Convert sub-referencing (<code>{{rp|...}}</code> → <code>details=</code>)', lang);
+    H(info('suppressGerman'), 'Suppress <code>Sprache=de</code>', lang);
+    H(info('fullLangCodes'), 'Output full language codes (e.g. en-GB)', lang);
+    H(info('overrideLang'), 'Override language manually', lang);
+    H(info('wikidataLookup'), 'Wikilinks → German (Wikidata)', lang);
+    H(info('keepDisplayNames'), 'Keep display names', lang);
+    H(info('removeNonExistingLinks'), 'Remove brackets when no German article exists', lang);
+    H(info('doiResolve'), 'Resolve template-less DOIs (→ <code>{{Literatur}}</code> / <code>{{Internetquelle}}</code>)', lang);
+    H(info('doiEnrich'), 'Enrich <code>{{cite}}</code> templates via Crossref (missing fields)', lang);
+    H(info('autoCopy'), 'Copy the converted output straight to the clipboard', lang);
+    H(info('updateCheck'), 'Check for a new version on startup (GitHub)', lang);
+
+    // Optionen – weitere Beschriftungen
+    T(q('label[for="doiFormat"]'), 'Target format for DOI', lang);
+    T(q('label[for="deeplKey"]'), 'DeepL API key', lang);
+    T(q('label[for="deeplTarget"]'), 'Target language', lang);
+    T(q('label[for="darkModeSelect"]'), 'Dark mode:', lang);
+    T(document.getElementById('uiLangLabel'), 'Interface:', lang);
+    T(q('#langSelectContainer > label'), 'Choose language (overrides heuristic)', lang);
+    T(document.getElementById('langInfo'), 'German (de) is not output by default. Foreign languages appear as a (two-letter) language code. This option disables the suppression.', lang);
+
+    // Select-/Segmented-Optionen
+    var dfo = qa('#doiFormat option'); T(dfo[0],'Automatic (by Crossref type)',lang); T(dfo[1],'Always {{Literatur}}',lang); T(dfo[2],'Always {{Internetquelle}}',lang);
+    var dmb = qa('#darkModeSegmented button'); T(dmb[0],'Auto',lang); T(dmb[1],'On',lang); T(dmb[2],'Off',lang);
+    var dms = qa('#darkModeSelect option'); T(dms[0],'Automatic (system)',lang); T(dms[1],'Always on',lang); T(dms[2],'Always off',lang);
+    T(q('#langSelect option[value=""]'), '— choose —', lang);
+
+    // Hinweise (HTML)
+    H(q('#optionsModal .opt-hint'), 'The key is stored only locally in this browser (it persists after closing) and is sent exclusively to DeepL. During translation, <code>&lt;ref&gt;…&lt;/ref&gt;</code> and wikilinks <code>[[…]]</code> stay unchanged. Note: as a local file, the call needs a CORS extension (e.g. „CORS Unblock“) that should only be active while translating.', lang);
+    H(q('#updateModal .opt-hint'), 'Curly is a single HTML file. Download the new version (ZIP), unpack it and replace your existing <code>Cite-Konverter.html</code>. Your settings stay stored in the browser.', lang);
+    // Update-Meldung (Platzhalter-Spans erhalten); Versionsnummern danach wieder einsetzen
+    H(q('#updateModal .update-msg'), 'A newer version is available: <strong id="updateLatest">–</strong> <span class="update-current">(your version: <span id="updateCurrent">–</span>)</span>.', lang);
+    try{
+      var tag=localStorage.getItem('ckUpdTag'); var ul=document.getElementById('updateLatest'); if(tag&&ul) ul.textContent='v'+String(tag).replace(/^v/i,'');
+      var bv=document.getElementById('versionBadge'); var uc=document.getElementById('updateCurrent'); if(bv&&uc) uc.textContent=bv.textContent;
+    }catch(e){}
+    T(document.getElementById('updateDownload'), '⬇️ Download new version', lang);
+    T(document.getElementById('updateRelease'), '📄 What’s new?', lang);
+  }
+
+  function effectiveLang(pref){
+    if(pref==='de'||pref==='en') return pref;
+    var n=(navigator.language||navigator.userLanguage||'').toLowerCase();
+    return n.indexOf('en')===0 ? 'en' : 'de';
+  }
+  function init(){
+    var pref='auto';
+    try{ pref = localStorage.getItem('uiLang') || 'auto'; }catch(e){}
+    var sel = document.getElementById('uiLangSelect');
+    if(sel){
+      sel.value = pref;
+      sel.addEventListener('change', function(){
+        var p = sel.value;
+        try{ localStorage.setItem('uiLang', p); }catch(e){}
+        applyLang(effectiveLang(p));
+      });
+    }
+    applyLang(effectiveLang(pref));
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
+<script>
+(function(){
+  function init(){
+    // v11.6: native <dialog> statt handgebauter Overlays. showModal() liefert
+    // Fokus-Falle, Hintergrund-Inert, Top-Layer und Esc-zu-schließen von selbst.
+    function openModal(modal){
+      if(!modal) return;
+      if(modal.open) return;
+      if(typeof modal.showModal === "function"){ try{ modal.showModal(); }catch(e){ try{ modal.setAttribute("open",""); }catch(_){} } }
+      else { modal.setAttribute("open",""); } // Fallback für sehr alte Browser
+      var f = modal.querySelector("input,select,button,textarea,[tabindex]");
+      if(f){ try{ f.focus(); }catch(e){} }
+    }
+    function closeModal(modal){
+      if(!modal) return;
+      if(typeof modal.close === "function"){ try{ modal.close(); return; }catch(e){} }
+      modal.removeAttribute("open");
+    }
     document.querySelectorAll("[data-modal-open]").forEach(function(btn){
       btn.addEventListener("click", function(e){ if(e && e.preventDefault) e.preventDefault(); openModal(document.getElementById(btn.getAttribute("data-modal-open"))); });
     });
-    document.querySelectorAll(".modal").forEach(function(modal){
-      modal.addEventListener("click", function(e){ var t=e.target; if(t && (t.getAttribute("data-close") || (t.closest && t.closest("[data-close]")))) closeModal(modal); });
+    document.querySelectorAll("dialog.modal").forEach(function(modal){
+      // Schließen bei Klick auf ✕/[data-close] ODER auf die Backdrop-Fläche
+      // (das <dialog>-Element selbst, außerhalb des .modal-dialog-Panels).
+      modal.addEventListener("click", function(e){
+        var t = e.target;
+        var onClose = t && ((t.getAttribute && t.getAttribute("data-close")) || (t.closest && t.closest("[data-close]")));
+        if(t === modal || onClose) closeModal(modal);
+      });
     });
-    document.addEventListener("keydown", function(e){ if(e.key === "Escape"){ document.querySelectorAll(".modal.is-open").forEach(closeModal); } });
+    // Esc schließt das native <dialog> von selbst (cancel-Event). Dieser Handler
+    // ist nur eine defensive Absicherung für ältere/abweichende Engines – bei
+    // bereits geschlossenem Dialog ein No-op, daher unschädlich.
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){
+        var open = document.querySelector("dialog.modal[open]");
+        if(open) closeModal(open);
+      }
+    });
   }
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();

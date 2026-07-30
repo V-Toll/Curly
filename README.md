@@ -26,7 +26,8 @@
 - 🔄 **Viele Vorlagen** – von `{{cite web}}` bis `{{blockquote}}`, jeweils in die passende deutsche Entsprechung.
 - 🔗 **DOI-Auflösung** – aus einem DOI holt Curly per [Crossref](https://www.crossref.org/) automatisch alle Angaben und baut ein fertiges `{{Literatur}}`. [Mehr dazu](#-doi-auflösung-crossref).
 - 🌍 **Wikidata & DeepL** – englische Wikilinks werden automatisch übersetzt, der Fließtext auf Wunsch per DeepL.
-- 🎨 **Rund 37 Farbthemen** inkl. Dunkelmodus – das Icon passt sich dem gewählten Theme an.
+- 🎨 **Rund 38 Farbthemen** inkl. Dunkelmodus – das Icon passt sich dem gewählten Theme an.
+- 🌐 **Zweisprachige Oberfläche** – Deutsch und Englisch, automatisch nach Systemsprache und in den Optionen umstellbar. (Konvertiert wird weiterhin ausschließlich Englisch → Deutsch, nicht umgekehrt.)
 - 🔒 **Datensparsam** – alles läuft lokal im Browser; nichts wird an Dritte gesendet.
 - 🔌 **Optionale Wikipedia-Bridge** – per Userscript direkt aus dem Bearbeitenfenster konvertieren (und übersetzen), ohne Kopieren. [Mehr dazu](#-optional-cite-konverter-bridge-userscript).
 
@@ -91,8 +92,9 @@
 - **`{{cite}}`-Vorlagen per Crossref ergänzen** – füllt fehlende Felder aus Crossref; abweichende Felder werden aufgelistet (standardmäßig aktiv).
 - **Zielformat bei DOI** – *Automatisch* (nach Crossref-Typ), *immer `{{Literatur}}`* oder *immer `{{Internetquelle}}`*.
 - **DeepL-API-Key & Zielsprache** – optional, für die DeepL-Übersetzung (siehe unten).
-- **Wahl aus rund 37 Farbthemen.**
+- **Wahl aus rund 38 Farbthemen.**
 - **Darkmode** – automatisch, erzwingen oder abschalten.
+- **Sprache / Language** – Oberfläche auf Deutsch oder Englisch, oder *Automatisch* nach Systemsprache.
 - **Beim Start auf neue Version prüfen (GitHub)** – blendet ein Update-Abzeichen ein, wenn eine neuere Version vorliegt (standardmäßig aktiv).
 
 </details>
@@ -182,13 +184,13 @@ Der Konverter nutzt intelligentes Caching (365 Tage für Wikidata-Übersetzungen
 
 ## 🎨 Design & Themes
 
-Rund 37 abgestimmte Farbthemen mit eigenen Hell- und Dunkelmodus-Varianten. Das Marken-Icon links vom Titel sowie das Browser-Tab-Favicon werden als eingebettetes SVG erzeugt und übernehmen automatisch die Akzentfarben des gewählten Themes – ganz ohne externe Bilddateien.
+Rund 38 abgestimmte Farbthemen mit eigenen Hell- und Dunkelmodus-Varianten (inkl. „Midnight", einem nahezu schwarzen Dark-Theme mit Eisblau-Akzent). Das Marken-Icon links vom Titel sowie das Browser-Tab-Favicon werden als eingebettetes SVG erzeugt und übernehmen automatisch die Akzentfarben des gewählten Themes – ganz ohne externe Bilddateien.
 
 ---
 
 ## 📦 Version & Changelog
 
-Aktuelle Version: **v11.5.0 „Communiqué"**. Den vollständigen Verlauf findest du in der [CHANGELOG.md](CHANGELOG.md) sowie direkt im Tool über das **📜**-Symbol.
+Aktuelle Version: **v11.6.0 „Lucid"**. Den vollständigen Verlauf findest du in der [CHANGELOG.md](CHANGELOG.md) sowie direkt im Tool über das **📜**-Symbol.
 
 ## 📄 Lizenz
 
