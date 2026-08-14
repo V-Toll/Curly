@@ -4,6 +4,10 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v11.6.1 (2026-08-14)
+
+- Behoben: Bei der `{{cite web}}`/`{{cite news}}`-Familie wurde der Parameter `author=` (auch `authorN=` und `authors=`) nicht ausgewertet und ging verloren – er wird jetzt korrekt als `autor=` übernommen. Explizite `last`/`first`-Angaben haben weiterhin Vorrang.
+
 ## v11.6.0 “Lucid” (2026-07-30)
 
 UI-Modernisierung nach aktuellen Web-Standards (Funktion/Konvertierung unverändert):
