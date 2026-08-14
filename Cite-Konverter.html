@@ -10,7 +10,7 @@
   <!-- Favicon: v9.2 „Sigil" – wird per Skript als eingebettetes SVG erzeugt und
        folgt dem gewählten Theme (siehe Skript am Seitenende). Keine externen Dateien. -->
   <link rel="icon" type="image/svg+xml" id="faviconSvg" />
-<title>Curly – der Cite-Konverter für Wikipedia – v11.6.1</title>
+<title>Curly – der Cite-Konverter für Wikipedia – v11.6.2</title>
 
 <style>
   html{min-height:100%}
@@ -842,7 +842,7 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
 <body class="theme-sunset">
   <div class="wrap">
     <div class="card" role="main" aria-labelledby="heading">
-      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.6.1</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
+      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.6.2</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
       <p class="brand-tagline">der Cite-Konverter für Wikipedia</p>
       <p class="lead">Konvertiert englische Wikipedia-Zitationsvorlagen in die passenden deutschen Vorlagen – inklusive automatischer Wikidata-Übersetzung der Wikilinks, optionaler DeepL-Übersetzung des Fließtexts sowie Subreferenzierung und Syntax-Highlighting.</p>
       <div class="routes" aria-label="Unterstützte Konvertierungen">
@@ -1087,6 +1087,12 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
       <div class="modal-body cl-body">
         <p class="cl-hint">Die letzten Einträge – der vollständige Verlauf steht auf GitHub.</p>
         <ul class="cl-list">
+          <li><strong>v11.6.2 · 2026-08-14</strong>
+            <ul>
+              <li>Behoben: Beim „Übersetzen (DeepL)" ging Text verloren, wenn direkt hinter einem geschützten Element (z.&nbsp;B. <code>]]'s</code>) weiterer Text folgte – DeepL erhielt kein wohlgeformtes XML und lieferte nur den ersten Platzhalter zurück. Der Text wird jetzt in ein Wurzelelement gehüllt.</li>
+              <li>Behoben: Konsolenfehler <code>InvalidStateError</code> beim Laden bzw. Theme-Wechsel – der Überblend-Effekt (View Transitions) wurde fälschlich schon beim Start und in nicht sichtbaren Tabs ausgelöst.</li>
+            </ul>
+          </li>
           <li><strong>v11.6.1 · 2026-08-14</strong>
             <ul>
               <li>Behoben: Bei <code>{{cite web}}</code>/<code>{{cite news}}</code> wurde der Parameter <code>author=</code> (auch <code>authorN=</code>/<code>authors=</code>) nicht übernommen und ging verloren – er wird jetzt korrekt als <code>autor=</code> ausgegeben. Explizite <code>last</code>/<code>first</code>-Angaben haben weiterhin Vorrang.</li>
@@ -1100,15 +1106,6 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
               <li>Fenster nutzen das native <code>&lt;dialog&gt;</code>-Element (Fokus-Falle, inerter Hintergrund, Esc-zu-schließen).</li>
               <li>Einheitliche Tastatur-Fokusringe; Fokus liegt beim Laden im Eingabefeld.</li>
               <li>Sanfter Theme-Wechsel (View Transitions), <code>theme-color</code> auf Mobil, <code>100dvh</code>, global respektierte „reduzierte Bewegung".</li>
-            </ul>
-          </li>
-          <li><strong>v11.5.0 &ldquo;Communiqué&rdquo; · 2026-07-22</strong>
-            <ul>
-              <li>Neue Konvertierung <code>{{Cite press release}}</code> → <code>{{Internetquelle}}</code>.</li>
-              <li>Autoren (<code>first/last</code>), Herausgeber (<code>editor-*</code>) und Interviewer (<code>interviewer-*</code>) werden gemeinsam in <code>autor</code> geführt; ein zugehöriger <code>*-link</code>-Parameter verlinkt die Person als Wikilink (<code>[[Ziel|Name]]</code>).</li>
-              <li>Feldzuordnung: <code>publisher</code>/<code>agency</code> → <code>hrsg</code>, <code>work</code> → <code>werk</code>, <code>page</code>/<code>pages</code> → <code>seiten</code>, <code>minutes</code>/<code>time</code>/<code>at</code> → <code>kommentar</code>, <code>quote</code> → <code>zitat</code>.</li>
-              <li>Druck-/Publikations-ID (ISBN, DOI, ISSN, PMID …) → stattdessen <code>{{Literatur}}</code> (die IDs bleiben erhalten).</li>
-              <li>Einheitlich <strong>ein Leerzeichen</strong> nach <code>{{Internetquelle</code> in allen Ausgabepfaden (zuvor entstanden an einigen Stellen zwei).</li>
             </ul>
           </li>
         </ul>
@@ -3200,28 +3197,34 @@ function highlightTemplateText(text){
         mc.setAttribute('content', solid);
       }catch(e){}
     }
-    function setTheme(name, persist=true){
+    function setTheme(name, persist=true, animate=false){
       var apply = function(){
         clearThemeClasses();
         if(name) document.body.classList.add('theme-'+name);
         themeOptions.forEach(el=>el.classList.toggle('active', el.dataset.theme===name));
         updateThemeColor();
       };
-      // v11.6 (#4): View Transitions – sanfter Crossfade beim Theme-Wechsel.
-      // Nur bei echtem Nutzerwechsel (nicht beim Erst-Anwenden) und ohne
-      // „reduzierte Bewegung"; sonst normaler, sofortiger Wechsel.
-      var isInitial = !Array.from(document.body.classList).some(c=>c.startsWith('theme-'));
+      // v11.6.2 (#4): View Transitions – sanfter Crossfade NUR bei echtem
+      // Nutzerwechsel (animate) und sichtbarem Dokument; ohne „reduzierte
+      // Bewegung". Beim Erst-Anwenden bzw. in verstecktem Tab sofort wechseln
+      // (früher löste das Erst-Anwenden fälschlich eine Transition aus, die im
+      // versteckten Tab mit InvalidStateError abbrach – „animate" ersetzt die
+      // fehleranfällige isInitial-Heuristik, da <body> mit theme-Klasse startet).
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(!isInitial && !reduce && typeof document.startViewTransition === 'function'){
-        document.startViewTransition(apply);
+      var canVT = animate && !reduce && typeof document.startViewTransition === 'function' && document.visibilityState === 'visible';
+      if(canVT){
+        try{
+          var vt = document.startViewTransition(apply);
+          if(vt && vt.finished && typeof vt.finished.catch === 'function') vt.finished.catch(function(){});
+        }catch(e){ apply(); }
       } else {
         apply();
       }
       if(persist) localStorage.setItem('theme', name);
     }
     themeOptions.forEach(el=>{
-      el.addEventListener('click', ()=> setTheme(el.dataset.theme));
-      el.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); setTheme(el.dataset.theme); }});
+      el.addEventListener('click', ()=> setTheme(el.dataset.theme, true, true));
+      el.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); setTheme(el.dataset.theme, true, true); }});
     });
     const savedTheme = localStorage.getItem('theme') || 'sunset';
     setTheme(savedTheme, false);
@@ -4205,7 +4208,12 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
       btn.disabled=true; btn.textContent="\u23F3 Uebersetze..."; setStatus("");
       try{
         var body=new URLSearchParams();
-        body.set("text",built.payload); body.set("target_lang",target);
+        // v11.6.2: Payload in ein einzelnes Wurzelelement <d>…</d> hüllen. Mit
+        // tag_handling=xml wäre Text direkt hinter einem führenden Platzhalter
+        // (z. B. "]]'s" → "<x>0</x>'s …") Text auf Dokument-Ebene und damit kein
+        // wohlgeformtes XML – DeepL brach dort ab und lieferte nur den ersten
+        // Platzhalter zurück. <d> ist kein ignore_tag, sein Inhalt wird übersetzt.
+        body.set("text","<d>"+built.payload+"</d>"); body.set("target_lang",target);
         body.set("tag_handling","xml"); body.set("ignore_tags","x"); body.set("outline_detection","0");
         var r=await fetch(endpoint,{method:"POST",headers:{"Authorization":"DeepL-Auth-Key "+key},body:body});
         if(!r.ok){
@@ -4219,6 +4227,8 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
         var data=await r.json();
         var tr=data&&data.translations&&data.translations[0]&&data.translations[0].text;
         if(tr==null){ setStatus("Unerwartete Antwort von DeepL.","err"); return; }
+        // Wurzelelement <d>…</d> wieder entfernen (tolerant ggü. Attributen/Leerraum).
+        var mWrap=tr.match(/<d\b[^>]*>([\s\S]*)<\/d>/i); if(mWrap) tr=mWrap[1];
         // DeepL setzt um die geschützten Platzhalter teils Anführungszeichen – vor dem Wiederherstellen entfernen
         // (gilt einheitlich für Wikilinks, Kursiv/Fett und ref):
         tr=tr.replace(/[\u201E\u201C\u0022](<x>\d+<\/x>)[\u201C\u201D\u0022]/g,"$1");

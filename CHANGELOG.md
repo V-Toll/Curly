@@ -4,6 +4,11 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v11.6.2 (2026-08-14)
+
+- Behoben: Beim „Übersetzen (DeepL)" ging Text verloren, wenn direkt hinter einem geschützten Element (Wikilink/`<ref>`/Kursiv) weiterer Klartext folgte – z. B. `[[…]]'s work …`. Mit `tag_handling=xml` war das Text auf Dokument-Ebene hinter dem Wurzelelement und damit kein wohlgeformtes XML; DeepL brach ab und lieferte nur den ersten Platzhalter zurück. Der Text wird jetzt in ein einzelnes Wurzelelement `<d>…</d>` gehüllt (nach der Übersetzung wieder entfernt).
+- Behoben: Konsolenfehler `InvalidStateError: Transition was aborted…` beim Laden bzw. Theme-Wechsel. Der Überblend-Effekt (View Transitions) wurde ausgelöst, obwohl `<body>` bereits mit einer Theme-Klasse startet (Erst-Anwendung) bzw. in nicht sichtbaren Tabs; er läuft jetzt nur noch bei echtem Nutzerwechsel und sichtbarem Dokument, und eine etwaige Ablehnung wird abgefangen.
+
 ## v11.6.1 (2026-08-14)
 
 - Behoben: Bei der `{{cite web}}`/`{{cite news}}`-Familie wurde der Parameter `author=` (auch `authorN=` und `authors=`) nicht ausgewertet und ging verloren – er wird jetzt korrekt als `autor=` übernommen. Explizite `last`/`first`-Angaben haben weiterhin Vorrang.
