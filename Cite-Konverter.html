@@ -899,9 +899,9 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
       <details class="feedback">
         <summary>💬 Feedback &amp; Mitwirken</summary>
         <div class="feedback-body">
-          <a id="reportBugLink" href="https://github.com/V-Toll/Cite-Konverter-Wikipedia/issues/new" target="_blank" rel="noopener">🐞 Fehler melden</a>
-          <a id="requestFeatureLink" href="https://github.com/V-Toll/Cite-Konverter-Wikipedia/issues/new" target="_blank" rel="noopener">💡 Funktion vorschlagen</a>
-          <a href="https://github.com/V-Toll/Cite-Konverter-Wikipedia" target="_blank" rel="noopener">📦 Projekt auf GitHub</a>
+          <a id="reportBugLink" href="https://github.com/V-Toll/Curly/issues/new" target="_blank" rel="noopener">🐞 Fehler melden</a>
+          <a id="requestFeatureLink" href="https://github.com/V-Toll/Curly/issues/new" target="_blank" rel="noopener">💡 Funktion vorschlagen</a>
+          <a href="https://github.com/V-Toll/Curly" target="_blank" rel="noopener">📦 Projekt auf GitHub</a>
         </div>
       </details>
     </div>
@@ -1109,7 +1109,7 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
             </ul>
           </li>
         </ul>
-        <a id="clFullLink" class="btn-main cl-link" href="https://github.com/V-Toll/Cite-Konverter-Wikipedia/blob/main/CHANGELOG.md" target="_blank" rel="noopener">📜 Vollständiger Verlauf auf GitHub</a>
+        <a id="clFullLink" class="btn-main cl-link" href="https://github.com/V-Toll/Curly/blob/main/CHANGELOG.md" target="_blank" rel="noopener">📜 Vollständiger Verlauf auf GitHub</a>
       </div>
     </div>
   </dialog>
@@ -4645,7 +4645,7 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
   }
   // Feedback-Links (GitHub-Issues) mit Version + Browser vorbefüllen
   function wireFeedback(){
-    var repo='https://github.com/V-Toll/Cite-Konverter-Wikipedia/issues/new';
+    var repo='https://github.com/V-Toll/Curly/issues/new';
     var badge=document.getElementById('versionBadge');
     var ver=((badge&&badge.textContent)||'').trim()||'?';
     var bug=document.getElementById('reportBugLink');
@@ -4820,7 +4820,7 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
    sind still. Kann in den Optionen deaktiviert werden.
    ========================================================================== */
 (function(){
-  var REPO='V-Toll/Cite-Konverter-Wikipedia';
+  var REPO='V-Toll/Curly';
   var API='https://api.github.com/repos/'+REPO+'/releases/latest';
   var THROTTLE=24*60*60*1000;
   var LS_TS='ckUpdTs', LS_TAG='ckUpdTag', LS_REL='ckUpdRel', LS_DL='ckUpdDl';

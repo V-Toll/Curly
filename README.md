@@ -8,13 +8,13 @@
 
 **Konvertiert englische Wikipedia-Zitationsvorlagen in die passenden deutschen Vorlagen – mit DOI-Auflösung über Crossref, automatischer Wikidata-Übersetzung der Wikilinks, optionaler DeepL-Übersetzung des Fließtexts, Subreferenzierung (`{{rp}}` → `details=`), Redirect-Auflösung und Syntax-Highlighting. Alles in einer einzigen HTML-Datei, ganz ohne Server, Installation oder externe Abhängigkeiten.**
 
-[![Version](https://img.shields.io/github/v/release/V-Toll/Cite-Konverter-Wikipedia?label=Version&color=8A2BE2)](https://github.com/V-Toll/Cite-Konverter-Wikipedia/releases)
+[![Version](https://img.shields.io/github/v/release/V-Toll/Curly?label=Version&color=8A2BE2)](https://github.com/V-Toll/Curly/releases)
 [![Lizenz](https://img.shields.io/badge/Lizenz-Unlicense-4CAF50)](LICENSE)
 [![Single-File](https://img.shields.io/badge/Single--File-HTML-FF8C00)](Cite-Konverter.html)
 [![Abhängigkeiten](https://img.shields.io/badge/Abh%C3%A4ngigkeiten-keine-2E7D32)](#-warum-dieses-tool)
 [![Für Wikipedia](https://img.shields.io/badge/f%C3%BCr-Wikipedia-lightgrey?logo=wikipedia&logoColor=white)](https://de.wikipedia.org)
 
-[⬇️ Neueste Version herunterladen](https://github.com/V-Toll/Cite-Konverter-Wikipedia/releases/latest) · [📜 Changelog](CHANGELOG.md) · [🐞 Problem melden](https://github.com/V-Toll/Cite-Konverter-Wikipedia/issues)
+[⬇️ Neueste Version herunterladen](https://github.com/V-Toll/Curly/releases/latest) · [📜 Changelog](CHANGELOG.md) · [🐞 Problem melden](https://github.com/V-Toll/Curly/issues)
 
 </div>
 
@@ -65,7 +65,7 @@
 
 ## 🚀 Nutzung
 
-1. Lade die Datei [`Cite-Konverter.html`](https://github.com/V-Toll/Cite-Konverter-Wikipedia/releases/latest) herunter und öffne sie im Browser deiner Wahl.
+1. Lade die Datei [`Cite-Konverter.html`](https://github.com/V-Toll/Curly/releases/latest) herunter und öffne sie im Browser deiner Wahl.
 2. Füge im ersten Eingabefeld den zu konvertierenden Code ein – gern inkl. `<ref>` bzw. `<ref name="…">`.
 3. Klicke auf **🔀 Konvertieren**. Im Ausgabefeld erscheint der fertig formatierte Einzelnachweis (`{{Internetquelle}}`, `{{Literatur}}` bzw. `{{Zitat}}`).
 4. Kopieren, auf der Wikipedia-Seite einfügen – und vor dem Speichern bitte noch einmal manuell prüfen. ✅
@@ -169,7 +169,7 @@ Die **Cite-Konverter Bridge** verbindet die Wikipedia-Bearbeitenseite direkt mit
 
 **Installation**
 
-[➡️ Bridge-Userscript installieren](https://github.com/V-Toll/Cite-Konverter-Wikipedia/raw/main/cite-konverter-bridge.user.js) – der Userscript-Manager erkennt die `.user.js`-Datei automatisch und bietet die Installation an. Quelltext: [`cite-konverter-bridge.user.js`](cite-konverter-bridge.user.js).
+[➡️ Bridge-Userscript installieren](https://github.com/V-Toll/Curly/raw/main/cite-konverter-bridge.user.js) – der Userscript-Manager erkennt die `.user.js`-Datei automatisch und bietet die Installation an. Quelltext: [`cite-konverter-bridge.user.js`](cite-konverter-bridge.user.js).
 
 > [!NOTE]
 > Die Bridge ist völlig optional. Der Konverter funktioniert eigenständig auch ohne sie – dann per Kopieren und Einfügen.
