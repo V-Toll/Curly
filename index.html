@@ -67,6 +67,11 @@
   .pill{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;padding:5px 11px;border-radius:999px;
     background:rgba(120,30,170,.07);border:1px solid var(--line);color:#4a3b57}
   .pill.out{background:var(--grad);color:#fff;border:none;font-weight:700}
+  a.pill{text-decoration:none;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease,background .12s ease,border-color .12s ease}
+  a.pill:hover{text-decoration:none;transform:translateY(-1px)}
+  a.pill:not(.out):hover{background:rgba(120,30,170,.12);border-color:rgba(120,30,170,.28)}
+  a.pill.out:hover{box-shadow:0 6px 16px rgba(180,50,210,.38)}
+  .pill:focus-visible{outline:2px solid var(--purple);outline-offset:2px}
   .arrow{color:var(--purple);font-weight:800;font-size:1.15rem}
 
   /* Feature grid */
@@ -92,6 +97,13 @@
   .final .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:48px 26px;box-shadow:var(--shadow);max-width:720px;margin:0 auto}
   .final h2{font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 10px}
   .final p{color:var(--muted);max-width:520px;margin:0 auto 26px}
+
+  /* Bridge */
+  .bridge .box{max-width:820px;margin:0 auto;text-align:center;background:var(--grad-soft);
+    border:1px solid var(--line);border-radius:24px;padding:46px 28px;box-shadow:0 12px 34px rgba(120,30,170,.12)}
+  .bridge .plug{font-size:42px;line-height:1;margin-bottom:8px}
+  .bridge h2{font-size:clamp(1.5rem,3.4vw,2.1rem);margin:.3em 0}
+  .bridge .box p{color:var(--muted);max-width:620px;margin:0 auto 24px}
 
   footer{border-top:1px solid var(--line);padding:40px 0;color:var(--muted);font-size:.9rem}
   .foot{display:flex;flex-wrap:wrap;gap:16px 26px;align-items:center;justify-content:space-between}
@@ -135,24 +147,24 @@
       </div>
       <div class="routes">
         <div class="route">
-          <span class="src"><span class="pill">cite web</span><span class="pill">cite news</span><span class="pill">cite magazine</span><span class="pill">cite press release</span></span>
+          <span class="src"><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_web" target="_blank" rel="noopener">cite web</a><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_news" target="_blank" rel="noopener">cite news</a><a class="pill" href="https://en.wikipedia.org/wiki/Template:Cite_magazine" target="_blank" rel="noopener">cite magazine</a><a class="pill" href="https://en.wikipedia.org/wiki/Template:Cite_press_release" target="_blank" rel="noopener">cite press release</a></span>
           <span class="arrow">→</span>
-          <span class="dst"><span class="pill out">Internetquelle</span></span>
+          <span class="dst"><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Internetquelle" target="_blank" rel="noopener">Internetquelle</a></span>
         </div>
         <div class="route">
-          <span class="src"><span class="pill">cite book</span><span class="pill">cite journal</span><span class="pill">cite encyclopedia</span><span class="pill">Citation</span></span>
+          <span class="src"><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_book" target="_blank" rel="noopener">cite book</a><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_journal" target="_blank" rel="noopener">cite journal</a><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_encyclopedia" target="_blank" rel="noopener">cite encyclopedia</a><a class="pill" href="https://en.wikipedia.org/wiki/Template:Citation" target="_blank" rel="noopener">Citation</a></span>
           <span class="arrow">→</span>
-          <span class="dst"><span class="pill out">Literatur</span></span>
+          <span class="dst"><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Literatur" target="_blank" rel="noopener">Literatur</a></span>
         </div>
         <div class="route">
-          <span class="src"><span class="pill">blockquote</span><span class="pill">quote</span></span>
+          <span class="src"><a class="pill" href="https://en.wikipedia.org/wiki/Template:Blockquote" target="_blank" rel="noopener">blockquote</a><a class="pill" href="https://en.wikipedia.org/wiki/Template:Blockquote" target="_blank" rel="noopener">quote</a></span>
           <span class="arrow">→</span>
-          <span class="dst"><span class="pill out">Zitat</span></span>
+          <span class="dst"><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Zitat" target="_blank" rel="noopener">Zitat</a></span>
         </div>
         <div class="route">
-          <span class="src"><span class="pill">DOI</span><span class="pill">10.xxxx/…</span></span>
+          <span class="src"><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:DOI" target="_blank" rel="noopener">DOI</a></span>
           <span class="arrow">→</span>
-          <span class="dst"><span class="pill out">Literatur</span><span class="pill out">Internetquelle</span></span>
+          <span class="dst"><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Literatur" target="_blank" rel="noopener">Literatur</a><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Internetquelle" target="_blank" rel="noopener">Internetquelle</a></span>
         </div>
       </div>
     </div>
@@ -163,7 +175,7 @@
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">Was Curly kann</span>
-        <h2>Mehr als nur Umbenennen</h2>
+        <h2>Mehr als nur Konvertieren</h2>
         <p>Curly übernimmt die Feinarbeit, die sonst von Hand nötig wäre.</p>
       </div>
       <div class="grid">
@@ -173,6 +185,21 @@
         <div class="feature"><div class="ico">🎨</div><h3>38 Farbthemen</h3><p>Vom hellen Sunset bis zum tiefdunklen „Midnight" – inklusive Dunkelmodus. Das Icon passt sich dem Theme an.</p></div>
         <div class="feature"><div class="ico">🌐</div><h3>Zweisprachige Oberfläche</h3><p>Bedienung auf Deutsch oder Englisch, automatisch nach Systemsprache. (Konvertiert wird weiterhin nur Englisch → Deutsch.)</p></div>
         <div class="feature"><div class="ico">🔒</div><h3>Datensparsam</h3><p>Alles läuft lokal im Browser. Kein Server, keine Tracker – nichts wird an Dritte gesendet.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BRIDGE ================= -->
+  <section class="bridge">
+    <div class="wrap">
+      <div class="box">
+        <div class="plug" aria-hidden="true">🔌</div>
+        <span class="eyebrow">Optional · Userscript</span>
+        <h2>Direkt in Wikipedia konvertieren</h2>
+        <p>Mit der <b>Cite-Konverter-Bridge</b> konvertierst und übersetzt du Einzelnachweise direkt im Bearbeiten-Fenster der Wikipedia – ohne Kopieren zwischen Tab und Tool. Voraussetzung ist ein Userscript-Manager wie <a href="https://violentmonkey.github.io/" target="_blank" rel="noopener">Violentmonkey</a> oder Tampermonkey.</p>
+        <div class="cta" style="justify-content:center">
+          <a class="btn btn-primary" href="https://github.com/V-Toll/Curly/releases/latest/download/cite-konverter-bridge.user.js">🔌 Bridge installieren</a>
+        </div>
       </div>
     </div>
   </section>
