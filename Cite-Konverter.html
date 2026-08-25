@@ -10,7 +10,7 @@
   <!-- Favicon: v9.2 „Sigil" – wird per Skript als eingebettetes SVG erzeugt und
        folgt dem gewählten Theme (siehe Skript am Seitenende). Keine externen Dateien. -->
   <link rel="icon" type="image/svg+xml" id="faviconSvg" />
-<title>Curly – der Cite-Konverter für Wikipedia – v11.6.2</title>
+<title>Curly – der Cite-Konverter für Wikipedia – v11.7.0</title>
 
 <style>
   html{min-height:100%}
@@ -842,7 +842,7 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
 <body class="theme-sunset">
   <div class="wrap">
     <div class="card" role="main" aria-labelledby="heading">
-      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.6.2</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
+      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.7.0</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
       <p class="brand-tagline">der Cite-Konverter für Wikipedia</p>
       <p class="lead">Konvertiert englische Wikipedia-Zitationsvorlagen in die passenden deutschen Vorlagen – inklusive automatischer Wikidata-Übersetzung der Wikilinks, optionaler DeepL-Übersetzung des Fließtexts sowie Subreferenzierung und Syntax-Highlighting.</p>
       <div class="routes" aria-label="Unterstützte Konvertierungen">
@@ -860,6 +860,11 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
           <span class="route-src"><a href="https://en.wikipedia.org/wiki/Template:Blockquote" target="_blank" rel="noopener"><code>blockquote</code></a><a href="https://en.wikipedia.org/wiki/Template:Blockquote" target="_blank" rel="noopener"><code>quote</code></a></span>
           <span class="route-arrow" aria-hidden="true">→</span>
           <span class="route-dst"><a href="https://de.wikipedia.org/wiki/Vorlage:Zitat" target="_blank" rel="noopener"><code>Zitat</code></a></span>
+        </div>
+        <div class="route">
+          <span class="route-src"><a href="https://en.wikipedia.org/wiki/Template:Track_listing" target="_blank" rel="noopener"><code>track listing</code></a></span>
+          <span class="route-arrow" aria-hidden="true">→</span>
+          <span class="route-dst"><a href="https://de.wikipedia.org/wiki/Vorlage:Titelliste" target="_blank" rel="noopener"><code>Titelliste</code></a></span>
         </div>
       </div>
 
@@ -1087,6 +1092,13 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
       <div class="modal-body cl-body">
         <p class="cl-hint">Die letzten Einträge – der vollständige Verlauf steht auf GitHub.</p>
         <ul class="cl-list">
+          <li><strong>v11.7.0 &ldquo;Setlist&rdquo; · 2026-08-25</strong>
+            <ul>
+              <li>Neue Konvertierung <code>{{Track listing}}</code> → <code>{{Titelliste}}</code> (Tracklisten von Alben/Singles). Feldzuordnung u.&nbsp;a.: <code>title→Titel</code>, <code>note→Notiz</code>, <code>length→Länge</code>, <code>lyrics→Text</code>, <code>music→Musik</code>, <code>writer→Autor</code>, <code>extra→Extra</code>; <code>headline→Überschrift</code>, <code>extra_column→Extra&nbsp;Spalte</code>, <code>total_length→Gesamtlänge</code>, <code>width→Größe</code>.</li>
+              <li>Die Sammel-Credits <code>all_writing</code>/<code>all_lyrics</code>/<code>all_music</code> (keine Entsprechung in <code>{{Titelliste}}</code>) werden als Satz über die Tabelle gesetzt, z.&nbsp;B. „Alle Titel wurden von … geschrieben."</li>
+              <li>Mehrere Vorlagen im Eingabefeld werden jetzt <strong>alle</strong> konvertiert (z.&nbsp;B. mehrere <code>{{Track listing}}</code> untereinander) – zuvor nur die erste.</li>
+            </ul>
+          </li>
           <li><strong>v11.6.2 · 2026-08-14</strong>
             <ul>
               <li>Behoben: Beim „Übersetzen (DeepL)" ging Text verloren, wenn direkt hinter einem geschützten Element (z.&nbsp;B. <code>]]'s</code>) weiterer Text folgte – DeepL erhielt kein wohlgeformtes XML und lieferte nur den ersten Platzhalter zurück. Der Text wird jetzt in ein Wurzelelement gehüllt.</li>
@@ -1096,16 +1108,6 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
           <li><strong>v11.6.1 · 2026-08-14</strong>
             <ul>
               <li>Behoben: Bei <code>{{cite web}}</code>/<code>{{cite news}}</code> wurde der Parameter <code>author=</code> (auch <code>authorN=</code>/<code>authors=</code>) nicht übernommen und ging verloren – er wird jetzt korrekt als <code>autor=</code> ausgegeben. Explizite <code>last</code>/<code>first</code>-Angaben haben weiterhin Vorrang.</li>
-            </ul>
-          </li>
-          <li><strong>v11.6.0 &ldquo;Lucid&rdquo; · 2026-07-30</strong>
-            <ul>
-              <li>UI-Modernisierung nach aktuellen Web-Standards.</li>
-              <li>Neues Farbschema <strong>„Midnight"</strong>.</li>
-              <li>Oberfläche jetzt auch auf <strong>Englisch</strong> (automatisch nach Systemsprache, in den Optionen unter <em>Sprache / Language</em> umstellbar) – <strong>konvertiert wird weiterhin nur Englisch → Deutsch</strong>, nicht umgekehrt.</li>
-              <li>Fenster nutzen das native <code>&lt;dialog&gt;</code>-Element (Fokus-Falle, inerter Hintergrund, Esc-zu-schließen).</li>
-              <li>Einheitliche Tastatur-Fokusringe; Fokus liegt beim Laden im Eingabefeld.</li>
-              <li>Sanfter Theme-Wechsel (View Transitions), <code>theme-color</code> auf Mobil, <code>100dvh</code>, global respektierte „reduzierte Bewegung".</li>
             </ul>
           </li>
         </ul>
@@ -2795,9 +2797,66 @@ function convertCitation(parsed, options) {
     return { text: out, changed: changed, count: count };
   }
 
+  /* ============================================================
+     v11.7 „Setlist" – {{Track listing}} → {{Titelliste}}
+     ------------------------------------------------------------
+     Eigenständige Tabellen-Vorlage (kein Einzelnachweis). Feldzuordnung 1:1
+     (Parameternamen aus der TemplateData von Vorlage:Titelliste). Die
+     Sammel-Credits all_writing/all_lyrics/all_music haben in {{Titelliste}}
+     keine Entsprechung und werden als Satz VOR die Vorlage gesetzt
+     (all_writing überschreibt lyrics/music – wie in der englischen Vorlage).
+     ============================================================ */
+  function isTrackListing(name){
+    var n=(name||'').trim().toLowerCase();
+    return n==='track listing' || n==='tracklist' || n==='track list' || n==='tracklisting';
+  }
+  function convertTrackListing(parsed, options){
+    var p = parsed.params; var log = []; var parts = [];
+    function add(k, v){ if(v!=null && String(v).trim()!==''){ parts.push('|'+k+'='+String(v).trim()); return true; } return false; }
+    // Kopf-Parameter (Reihenfolge wie in {{Titelliste}})
+    add('Größe', p['width']);
+    add('collapsed', p['collapsed']);
+    add('Überschrift', p['headline']);
+    add('Extra Spalte', p['extra_column']);
+    add('Gesamtlänge', p['total_length']);
+    // Track-Indizes einsammeln (müssen nicht fortlaufend sein) und sortieren
+    var idx = {};
+    Object.keys(p).forEach(function(k){
+      var m = k.match(/^(title|note|length|lyrics|music|writer|extra)(\d+)$/);
+      if(m) idx[parseInt(m[2],10)] = true;
+    });
+    var nums = Object.keys(idx).map(Number).sort(function(a,b){ return a-b; });
+    nums.forEach(function(i){
+      // Titel immer ausgeben (auch leer → unbenannter Track); Reihenfolge Titel/Notiz/Länge/Text/Musik/Autor/Extra
+      parts.push('|Titel'+i+'='+String(p['title'+i]!=null ? p['title'+i] : '').trim());
+      add('Notiz'+i, p['note'+i]);
+      add('Länge'+i, p['length'+i]);
+      add('Text'+i,  p['lyrics'+i]);   // lyricsN → TextN (Liedtexter)
+      add('Musik'+i, p['music'+i]);    // musicN  → MusikN (Komponisten)
+      add('Autor'+i, p['writer'+i]);   // writerN → AutorN
+      add('Extra'+i, p['extra'+i]);
+    });
+    var out = '{{Titelliste\n' + parts.join('\n') + '\n}}';
+    log.push('Track listing → {{Titelliste}} (' + nums.length + ' Titel)');
+
+    // Sammel-Credits als Satz über der Tabelle (all_writing hat Vorrang)
+    function clean(v){ return String(v).replace(/\s*\.\s*$/,'').trim(); }
+    var sentences = [];
+    if(String(p['all_writing']||'').trim()){
+      sentences.push('Alle Titel wurden von ' + clean(p['all_writing']) + ' geschrieben.');
+      log.push('all_writing → Satz über der Tabelle');
+    } else {
+      if(String(p['all_lyrics']||'').trim()){ sentences.push('Alle Liedtexte wurden von ' + clean(p['all_lyrics']) + ' geschrieben.'); log.push('all_lyrics → Satz über der Tabelle'); }
+      if(String(p['all_music']||'').trim()){  sentences.push('Alle Musik wurde von ' + clean(p['all_music']) + ' komponiert.'); log.push('all_music → Satz über der Tabelle'); }
+    }
+    if(sentences.length) out = sentences.join(' ') + '\n' + out;
+    return { output: out, log: log };
+  }
+
   function convertTemplateString(tplString, options){
     const parsed = parseTemplateParams(tplString);
     if(!parsed.name) return { output: tplString, log: ['Keine Template-Erkennung'] };
+    if(isTrackListing(parsed.name)) return convertTrackListing(parsed, options);
     if(isCiteBook(parsed.name)) return convertCiteBook(parsed, options);
     if(isCiteJournal(parsed.name)) return convertCiteJournal(parsed, options);
     if(isCiteEncyclopedia(parsed.name)) return convertCiteEncyclopedia(parsed, options);
@@ -3027,14 +3086,17 @@ function highlightTemplateText(text){
     return refOpen + inner.slice(0, tpl.start) + converted.output + inner.slice(tpl.end) + refClose;
   });
 
-  // Path B: convert the first top-level template anywhere
-  let resultB = input;
-  const tplAll = findFirstTopLevelTemplate(input);
-  if(tplAll){
-    const converted = convertTemplateString(tplAll.text, options);
-    if(converted.output !== tplAll.text){
-      resultB = input.slice(0, tplAll.start) + converted.output + input.slice(tplAll.end);
-    }
+  // Path B: convert ALL top-level templates anywhere.
+  // v11.7.0: zuvor wurde nur die erste Top-Level-Vorlage konvertiert – bei mehreren
+  // Vorlagen (z. B. mehrere {{Track listing}} untereinander) blieben die übrigen stehen.
+  let resultB = '';
+  let restB = input;
+  while(true){
+    const tpl = findFirstTopLevelTemplate(restB);
+    if(!tpl){ resultB += restB; break; }
+    const converted = convertTemplateString(tpl.text, options);
+    resultB += restB.slice(0, tpl.start) + converted.output;
+    restB = restB.slice(tpl.end);
   }
 
   // Choose best result: prefer A if it changed anything; else B; else unchanged
@@ -3653,10 +3715,17 @@ document.addEventListener("DOMContentLoaded", () => {
       if(typeof window.findFirstTopLevelTemplate!=='function' || typeof window.convertTemplateString!=='function'){
         return;
       }
-      var blk = window.findFirstTopLevelTemplate(input);
-      if(!blk || !blk.text) return;
-      var conv = window.convertTemplateString(blk.text, opts) || {};
-      var out = input.slice(0, blk.start) + (conv.output || blk.text) + input.slice(blk.end);
+      if(!window.findFirstTopLevelTemplate(input)) return;
+      // v11.7.0: ALLE Top-Level-Vorlagen konvertieren (zuvor nur die erste). Dieser
+      // Fallback läuft bei jedem Klick und kürzte das Ergebnis sonst auf eine Vorlage.
+      var out='', rest=input;
+      while(true){
+        var blk = window.findFirstTopLevelTemplate(rest);
+        if(!blk || !blk.text){ out += rest; break; }
+        var conv = window.convertTemplateString(blk.text, opts) || {};
+        out += rest.slice(0, blk.start) + (conv.output || blk.text);
+        rest = rest.slice(blk.end);
+      }
       if(outEl){ outEl.value = out; }
       try{ if(typeof window.updateOutputHighlight==='function') window.updateOutputHighlight(); }catch(e){}
     }catch(e){ /* swallow */ }

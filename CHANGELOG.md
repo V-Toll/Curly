@@ -4,6 +4,14 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v11.7.0 “Setlist” (2026-08-25)
+
+- Neue Konvertierung `{{Track listing}}` → `{{Titelliste}}` für Tracklisten von Alben und Singles (eigenständige Tabellen-Vorlage, kein Einzelnachweis).
+- Feldzuordnung je Titel: `title→Titel`, `note→Notiz`, `length→Länge`, `lyrics→Text`, `music→Musik`, `writer→Autor`, `extra→Extra`. Kopf: `headline→Überschrift`, `extra_column→Extra Spalte`, `total_length→Gesamtlänge`, `width→Größe`, `collapsed→collapsed`. Nicht fortlaufende Titelnummern bleiben erhalten.
+- Die Sammel-Credits `all_writing`/`all_lyrics`/`all_music` haben in `{{Titelliste}}` keine Entsprechung und werden als Satz über die Tabelle gesetzt (z. B. „Alle Titel wurden von … geschrieben.“; `all_writing` hat Vorrang, wie in der englischen Vorlage). Spaltenbreiten-Parameter (`title_width` u. a.) entfallen mangels Entsprechung.
+- Track-Wikilinks werden – wie bei den übrigen Konvertierungen – über Wikidata ins Deutsche übersetzt bzw. entlinkt.
+- Mehrere Vorlagen im Eingabefeld werden jetzt **alle** konvertiert (z. B. mehrere `{{Track listing}}` untereinander); zuvor wurde nur die erste Top-Level-Vorlage umgesetzt.
+
 ## v11.6.2 (2026-08-14)
 
 - Behoben: Beim „Übersetzen (DeepL)" ging Text verloren, wenn direkt hinter einem geschützten Element (Wikilink/`<ref>`/Kursiv) weiterer Klartext folgte – z. B. `[[…]]'s work …`. Mit `tag_handling=xml` war das Text auf Dokument-Ebene hinter dem Wurzelelement und damit kein wohlgeformtes XML; DeepL brach ab und lieferte nur den ersten Platzhalter zurück. Der Text wird jetzt in ein einzelnes Wurzelelement `<d>…</d>` gehüllt (nach der Übersetzung wieder entfernt).
