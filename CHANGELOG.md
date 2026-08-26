@@ -4,6 +4,12 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v11.8.0 “Crate” (2026-08-26)
+
+- Neu: **Discogs-Links** werden automatisch in die passende Wikipedia-Vorlage umgewandelt: `discogs.com/release/…` → `{{Discogs Titel|ID|Titel|Interpret|Abruf=}}`, `…/master/…` → `{{Discogs Master|ID|Titel|Abruf=}}`, `…/artist/…` → `{{Discogs|ID|Name|Abruf=}}`, `…/label/…` → `{{Discogs Label|ID|Name|Abruf=}}`. Titel/Interpret/Name werden über die (CORS-fähige) Discogs-API geholt – ohne Schlüssel; Ergebnisse werden 365 Tage lokal gecacht, `Abruf` = heutiges Datum. Discogs-URLs innerhalb einer `{{cite …}}`-Vorlage (`|url=`) bleiben unangetastet.
+- Behoben: `{{cite news}}`/`{{cite magazine}}` **ohne URL**, aber mit Druckangabe (`issue`/`page`/`pages`/`volume`) werden jetzt als `{{Literatur}}` aufgebaut (gedrucktes Werk) statt als `{{Internetquelle}}` – `magazine`/`newspaper` → `Sammelwerk`, `issue` → `Nummer`, `page` → `Seiten`. Online-Artikel (mit URL) bleiben `{{Internetquelle}}`.
+- Wird das Eingabefeld komplett geleert, wird jetzt auch das Ausgabefeld geleert.
+
 ## v11.7.0 “Setlist” (2026-08-25)
 
 - Neue Konvertierung `{{Track listing}}` → `{{Titelliste}}` für Tracklisten von Alben und Singles (eigenständige Tabellen-Vorlage, kein Einzelnachweis).

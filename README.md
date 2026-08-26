@@ -41,6 +41,7 @@
 | [`{{cite book}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_book) · [`{{cite journal}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_journal) · [`{{cite encyclopedia}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_encyclopedia) · [`{{Citation}}`](https://en.wikipedia.org/wiki/Template:Citation) | → | [`{{Literatur}}`](https://de.wikipedia.org/wiki/Vorlage:Literatur) |
 | [`{{blockquote}}`](https://en.wikipedia.org/wiki/Template:Blockquote) · [`{{quote}}`](https://en.wikipedia.org/wiki/Template:Blockquote) | → | [`{{Zitat}}`](https://de.wikipedia.org/wiki/Vorlage:Zitat) |
 | [`{{track listing}}`](https://en.wikipedia.org/wiki/Template:Track_listing) | → | [`{{Titelliste}}`](https://de.wikipedia.org/wiki/Vorlage:Titelliste) |
+| [Discogs](https://www.discogs.com/)-Link (`release` · `master` · `artist` · `label`) | → | [`{{Discogs Titel}}`](https://de.wikipedia.org/wiki/Vorlage:Discogs_Titel) · [`{{Discogs Master}}`](https://de.wikipedia.org/wiki/Vorlage:Discogs_Master) · [`{{Discogs}}`](https://de.wikipedia.org/wiki/Vorlage:Discogs) · [`{{Discogs Label}}`](https://de.wikipedia.org/wiki/Vorlage:Discogs_Label) |
 
 | DOI (`doi.org`-Link · Verlags-URL · reine `10.xxxx/…`-Nummer) | → | [`{{Literatur}}`](https://de.wikipedia.org/wiki/Vorlage:Literatur) bzw. [`{{Internetquelle}}`](https://de.wikipedia.org/wiki/Vorlage:Internetquelle) (über [Crossref](https://www.crossref.org/)) |
 
@@ -55,6 +56,7 @@
 - **Wikidata-Integration:** Englische Wikilinks werden automatisch ins Deutsche übersetzt (z. B. `[[Yellowstone National Park]]` → `[[Yellowstone-Nationalpark]]`). Display-Namen bleiben optional erhalten, fehlende deutsche Artikel werden intelligent behandelt. Die Titel werden dabei gebündelt abgefragt, sodass auch viele Wikilinks zügig übersetzt werden.
 - **Wikipedia-Redirects:** Automatische Verfolgung von Redirects – englische Wikilinks werden zum finalen Artikel aufgelöst und korrekt ins Deutsche übersetzt (z. B. `[[Eastern Band Cherokee]]` → `[[Eastern Band of Cherokee Indians]]`).
 - **Pressemitteilungen:** `{{Cite press release}}` wird zu `{{Internetquelle}}` (Autoren/Herausgeber/Interviewer zusammengeführt in `autor`, inkl. Wikilinks über `*-link`). Enthält die Vorlage eine Druck-/Publikations-ID (ISBN, DOI, ISSN …), wird stattdessen `{{Literatur}}` gebaut.
+- **Discogs-Links:** Ein Discogs-Link (Release/Master/Artist/Label) wird automatisch in die passende Vorlage (`{{Discogs Titel}}` / `{{Discogs Master}}` / `{{Discogs}}` / `{{Discogs Label}}`) umgewandelt – Titel/Interpret/Name kommen über die Discogs-API, `Abruf` = heute.
 - **Tracklisten:** `{{Track listing}}` wird zu `{{Titelliste}}` (Alben/Singles) – inkl. Titel/Länge/Autor/Text/Musik/Notiz je Titel. Sammel-Credits (`all_writing` …) werden als Satz über die Tabelle gesetzt.
 - **Zitat-Konvertierung:** `{{blockquote}}` / `{{quote}}` werden zu `{{Zitat}}` – inklusive Sprach­erkennung, `{{lang|xx|…}}`-Entpackung, `multiline`-Umbrüchen und dem Einziehen eines direkt anschließenden `<ref>` in den `ref`-Parameter.
 - **DOI-Auflösung (Crossref):** DOIs werden erkannt und automatisch zu vollständigen `{{Literatur}}`-Angaben aufgelöst; bestehende `{{cite}}`-Vorlagen mit `doi=` lassen sich um fehlende Felder ergänzen – siehe [eigener Abschnitt](#-doi-auflösung-crossref).
@@ -192,7 +194,7 @@ Rund 38 abgestimmte Farbthemen mit eigenen Hell- und Dunkelmodus-Varianten. Das 
 
 ## 📦 Version & Changelog
 
-Aktuelle Version: **v11.7.0 „Setlist"**. Den vollständigen Verlauf findest du in der [CHANGELOG.md](CHANGELOG.md) sowie direkt im Tool über das **📜**-Symbol.
+Aktuelle Version: **v11.8.0 „Crate"**. Den vollständigen Verlauf findest du in der [CHANGELOG.md](CHANGELOG.md) sowie direkt im Tool über das **📜**-Symbol.
 
 ## 📄 Lizenz
 

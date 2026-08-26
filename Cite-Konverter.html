@@ -10,7 +10,7 @@
   <!-- Favicon: v9.2 „Sigil" – wird per Skript als eingebettetes SVG erzeugt und
        folgt dem gewählten Theme (siehe Skript am Seitenende). Keine externen Dateien. -->
   <link rel="icon" type="image/svg+xml" id="faviconSvg" />
-<title>Curly – der Cite-Konverter für Wikipedia – v11.7.0</title>
+<title>Curly – der Cite-Konverter für Wikipedia – v11.8.0</title>
 
 <style>
   html{min-height:100%}
@@ -842,7 +842,7 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
 <body class="theme-sunset">
   <div class="wrap">
     <div class="card" role="main" aria-labelledby="heading">
-      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.7.0</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
+      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.8.0</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
       <p class="brand-tagline">der Cite-Konverter für Wikipedia</p>
       <p class="lead">Konvertiert englische Wikipedia-Zitationsvorlagen in die passenden deutschen Vorlagen – inklusive automatischer Wikidata-Übersetzung der Wikilinks, optionaler DeepL-Übersetzung des Fließtexts sowie Subreferenzierung und Syntax-Highlighting.</p>
       <div class="routes" aria-label="Unterstützte Konvertierungen">
@@ -865,6 +865,11 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
           <span class="route-src"><a href="https://en.wikipedia.org/wiki/Template:Track_listing" target="_blank" rel="noopener"><code>track listing</code></a></span>
           <span class="route-arrow" aria-hidden="true">→</span>
           <span class="route-dst"><a href="https://de.wikipedia.org/wiki/Vorlage:Titelliste" target="_blank" rel="noopener"><code>Titelliste</code></a></span>
+        </div>
+        <div class="route">
+          <span class="route-src"><a href="https://www.discogs.com/" target="_blank" rel="noopener"><code>discogs.com-Link</code></a></span>
+          <span class="route-arrow" aria-hidden="true">→</span>
+          <span class="route-dst"><a href="https://de.wikipedia.org/wiki/Vorlage:Discogs_Titel" target="_blank" rel="noopener"><code>Discogs Titel</code></a><a href="https://de.wikipedia.org/wiki/Vorlage:Discogs_Master" target="_blank" rel="noopener"><code>Discogs Master</code></a><a href="https://de.wikipedia.org/wiki/Vorlage:Discogs" target="_blank" rel="noopener"><code>Discogs</code></a><a href="https://de.wikipedia.org/wiki/Vorlage:Discogs_Label" target="_blank" rel="noopener"><code>Discogs Label</code></a></span>
         </div>
       </div>
 
@@ -1092,6 +1097,13 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
       <div class="modal-body cl-body">
         <p class="cl-hint">Die letzten Einträge – der vollständige Verlauf steht auf GitHub.</p>
         <ul class="cl-list">
+          <li><strong>v11.8.0 &ldquo;Crate&rdquo; · 2026-08-26</strong>
+            <ul>
+              <li>Neu: <strong>Discogs-Links</strong> werden automatisch in die passende Vorlage umgewandelt – <code>/release/</code> → <code>{{Discogs Titel}}</code>, <code>/master/</code> → <code>{{Discogs Master}}</code>, <code>/artist/</code> → <code>{{Discogs}}</code>, <code>/label/</code> → <code>{{Discogs Label}}</code>. Titel/Interpret/Name kommen über die Discogs-API (kein Schlüssel nötig), <code>Abruf</code> = heutiges Datum.</li>
+              <li>Behoben: <code>{{cite news}}</code>/<code>{{cite magazine}}</code> <strong>ohne URL</strong>, aber mit Druckangabe (<code>issue</code>/<code>page</code>/<code>volume</code>) werden jetzt als <code>{{Literatur}}</code> aufgebaut (gedrucktes Werk) statt als <code>{{Internetquelle}}</code>.</li>
+              <li>Wird das Eingabefeld komplett geleert, wird jetzt auch das Ausgabefeld geleert.</li>
+            </ul>
+          </li>
           <li><strong>v11.7.0 &ldquo;Setlist&rdquo; · 2026-08-25</strong>
             <ul>
               <li>Neue Konvertierung <code>{{Track listing}}</code> → <code>{{Titelliste}}</code> (Tracklisten von Alben/Singles). Feldzuordnung u.&nbsp;a.: <code>title→Titel</code>, <code>note→Notiz</code>, <code>length→Länge</code>, <code>lyrics→Text</code>, <code>music→Musik</code>, <code>writer→Autor</code>, <code>extra→Extra</code>; <code>headline→Überschrift</code>, <code>extra_column→Extra&nbsp;Spalte</code>, <code>total_length→Gesamtlänge</code>, <code>width→Größe</code>.</li>
@@ -1103,11 +1115,6 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
             <ul>
               <li>Behoben: Beim „Übersetzen (DeepL)" ging Text verloren, wenn direkt hinter einem geschützten Element (z.&nbsp;B. <code>]]'s</code>) weiterer Text folgte – DeepL erhielt kein wohlgeformtes XML und lieferte nur den ersten Platzhalter zurück. Der Text wird jetzt in ein Wurzelelement gehüllt.</li>
               <li>Behoben: Konsolenfehler <code>InvalidStateError</code> beim Laden bzw. Theme-Wechsel – der Überblend-Effekt (View Transitions) wurde fälschlich schon beim Start und in nicht sichtbaren Tabs ausgelöst.</li>
-            </ul>
-          </li>
-          <li><strong>v11.6.1 · 2026-08-14</strong>
-            <ul>
-              <li>Behoben: Bei <code>{{cite web}}</code>/<code>{{cite news}}</code> wurde der Parameter <code>author=</code> (auch <code>authorN=</code>/<code>authors=</code>) nicht übernommen und ging verloren – er wird jetzt korrekt als <code>autor=</code> ausgegeben. Explizite <code>last</code>/<code>first</code>-Angaben haben weiterhin Vorrang.</li>
             </ul>
           </li>
         </ul>
@@ -1783,6 +1790,22 @@ function getDisplaySiteNameFromUrl(url){
 
 function convertCiteWebFamily(parsed, options){
   const params = parsed.params;
+
+  // v11.8.0: Gedruckte Periodika → {{Literatur}} statt {{Internetquelle}}.
+  // {{cite news}}/{{cite magazine}} OHNE URL, aber mit Druckangaben (issue/page/
+  // pages/volume), sind Printquellen. Sie werden wie {{cite journal}} nach
+  // {{Literatur}} überführt (magazine/newspaper/periodical → Sammelwerk).
+  var __nm = (parsed.name||'').trim().toLowerCase();
+  if((__nm==='cite news' || __nm==='cite magazine')
+     && !(params.url && String(params.url).trim())
+     && (params.page || params.pages || params.issue || params.volume || params.number || params.no)){
+    var p2 = {}; for(var __k in params) p2[__k] = params[__k];
+    if(!p2.journal) p2.journal = params.magazine || params.newspaper || params.periodical || params.work || params.website;
+    var __res = convertCiteJournal({ name:'cite journal', params:p2, raw:parsed.raw }, options);
+    __res.log = ['Gedrucktes Periodikum (ohne URL, mit Druckangabe) → {{Literatur}}'].concat(__res.log || []);
+    return __res;
+  }
+
   const finalParams = {};
   const log = [];
 
@@ -3175,6 +3198,14 @@ function highlightTemplateText(text){
           });
           if (doiRes && typeof doiRes.text === 'string') converted = doiRes.text;
         } catch(e) { console.error('DOI processing failed:', e); }
+      }
+
+      // v11.8.0: Discogs-URLs → passende {{Discogs …}}-Vorlage (über die Discogs-API).
+      if (typeof window.processDiscogs === 'function') {
+        try {
+          var dcRes = await window.processDiscogs(converted, { today: todayISO() });
+          if (dcRes && typeof dcRes.text === 'string') converted = dcRes.text;
+        } catch(e) { console.error('Discogs processing failed:', e); }
       }
 
       document.getElementById('outputText').value = converted;
@@ -4873,7 +4904,11 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
     clear:function(){ state.offline=[]; state.doi=[]; var box=$('conversionLog'); if(box){ box.hidden=true; box.innerHTML=''; } }
   };
 
-  function initLog(){ var inp=$('inputText'); if(inp) inp.addEventListener('input', function(){ window.CKLog.clear(); }); }
+  function initLog(){ var inp=$('inputText'); if(inp) inp.addEventListener('input', function(){
+    window.CKLog.clear();
+    // v11.8.0: Eingabefeld komplett geleert → Ausgabefeld ebenfalls leeren.
+    if(inp.value.trim()===''){ var out=$('outputText'); if(out && out.value!==''){ out.value=''; try{ if(window.updateOutputHighlight) window.updateOutputHighlight(); }catch(e){} } }
+  }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initLog); else initLog();
 })();
 </script>
@@ -4961,6 +4996,90 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
 
   // für Tests: erzwingt eine sofortige (ungedrosselte) Prüfung
   window.__ckCheckUpdate = function(){ try{ localStorage.removeItem(LS_TS); }catch(e){} check(); };
+})();
+</script>
+
+<script>
+/* v11.8.0 „Crate" – Discogs-URLs → passende Wikipedia-Vorlage.
+   discogs.com/release → {{Discogs Titel|ID|Titel|Interpret|Abruf=}}
+   discogs.com/master  → {{Discogs Master|ID|Titel|Abruf=}}
+   discogs.com/artist  → {{Discogs|ID|Name|Abruf=}}
+   discogs.com/label   → {{Discogs Label|ID|Name|Abruf=}}
+   Titel/Interpret/Name kommen über die CORS-fähige Discogs-API (ohne Schlüssel);
+   Ergebnisse werden 365 Tage lokal gecacht. Nur URLs AUSSERHALB von {{…}} werden
+   ersetzt – so bleiben Discogs-URLs in |url= von Zitatvorlagen unangetastet. */
+(function(){
+  var API='https://api.discogs.com/';
+  var TYPE={ release:{ep:'releases',tpl:'Discogs Titel'}, master:{ep:'masters',tpl:'Discogs Master'},
+             artist:{ep:'artists',tpl:'Discogs'}, label:{ep:'labels',tpl:'Discogs Label'} };
+  var URL_RE=/https?:\/\/(?:www\.)?discogs\.com\/(?:[a-z]{2}\/)?(release|master|artist|label)\/(\d+)(?:-[^\s\]<>|{}"']*)?/gi;
+
+  function cacheGet(k){ try{ var v=localStorage.getItem('ckDiscogs:'+k); if(!v) return null; var o=JSON.parse(v); if(o && o.t && (Date.now()-o.t)<365*24*3600*1000) return o.d; }catch(e){} return null; }
+  function cacheSet(k,d){ try{ localStorage.setItem('ckDiscogs:'+k, JSON.stringify({t:Date.now(),d:d})); }catch(e){} }
+  function stripDisamb(s){ return String(s||'').replace(/\s*\(\d+\)\s*$/,'').trim(); }
+
+  function artistDisplay(data){
+    var arr=data && data.artists;
+    if(Array.isArray(arr) && arr.length){
+      var s='';
+      for(var i=0;i<arr.length;i++){
+        var a=arr[i]; s+=stripDisamb(a.anv || a.name);
+        if(i<arr.length-1){ var j=(a.join||'').trim(); s+= j ? (/^[,&]/.test(j)? j+' ' : ' '+j+' ') : ', '; }
+      }
+      s=s.trim().replace(/[,&]\s*$/,'').trim();
+      if(s) return s;
+    }
+    return stripDisamb(data && data.artists_sort);
+  }
+
+  async function fetchInfo(type, id){
+    var key=type+'/'+id, c=cacheGet(key); if(c) return c;
+    var url=API+TYPE[type].ep+'/'+id;
+    var fx=(typeof fetchWithTimeout==='function') ? fetchWithTimeout(url, 8000) : fetch(url);
+    var r=await fx; if(!r.ok) throw new Error('HTTP '+r.status);
+    var d=await r.json();
+    var info={ title:d.title||'', artist:artistDisplay(d), name:stripDisamb(d.name) };
+    cacheSet(key, info); return info;
+  }
+
+  function build(type, id, info, today){
+    var abruf = today ? ('|Abruf='+today) : '';
+    if(type==='release') return '{{Discogs Titel|'+id+'|'+(info.title||'')+'|'+(info.artist||'')+abruf+'}}';
+    if(type==='master')  return '{{Discogs Master|'+id+'|'+(info.title||'')+abruf+'}}';
+    if(type==='artist')  return '{{Discogs|'+id+'|'+(info.name||'')+abruf+'}}';
+    if(type==='label')   return '{{Discogs Label|'+id+'|'+(info.name||'')+abruf+'}}';
+    return null;
+  }
+
+  // Liegt Position pos innerhalb einer {{…}}-Vorlage (Klammertiefe > 0)?
+  function insideTemplate(text, pos){
+    var depth=0;
+    for(var i=0;i<pos;i++){
+      if(text[i]==='{'&&text[i+1]==='{'){ depth++; i++; }
+      else if(text[i]==='}'&&text[i+1]==='}'&&depth>0){ depth--; i++; }
+    }
+    return depth>0;
+  }
+
+  window.processDiscogs = async function(text, options){
+    options=options||{}; var today=options.today||''; var notices=[];
+    if(!text || text.indexOf('discogs.com')<0) return { text:text, notices:notices };
+    var matches=[], m; URL_RE.lastIndex=0;
+    while((m=URL_RE.exec(text))){
+      if(insideTemplate(text, m.index)) continue;
+      matches.push({ start:m.index, end:m.index+m[0].length, type:m[1].toLowerCase(), id:m[2] });
+    }
+    if(!matches.length) return { text:text, notices:notices };
+    for(var i=matches.length-1;i>=0;i--){   // von hinten ersetzen, Indizes bleiben gültig
+      var mm=matches[i];
+      try{
+        var info=await fetchInfo(mm.type, mm.id);
+        var tpl=build(mm.type, mm.id, info, today);
+        if(tpl){ text=text.slice(0,mm.start)+tpl+text.slice(mm.end); notices.push('Discogs '+mm.type+' → {{'+TYPE[mm.type].tpl+'}}'); }
+      }catch(e){ /* still: URL unverändert lassen */ }
+    }
+    return { text:text, notices:notices };
+  };
 })();
 </script>
 </body>
