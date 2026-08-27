@@ -4,6 +4,10 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v11.8.1 (2026-08-27)
+
+- Steht ein Discogs-Link als `|url=` in einem `{{cite web}}` (Discogs `/release/`, `/master/`, `/artist/`, `/label/`), wird jetzt die passende `{{Discogs …}}`-Vorlage erzeugt statt `{{Internetquelle}}`. Ist die Discogs-API nicht erreichbar, bleibt es als Fallback bei `{{Internetquelle}}`. (Freistehende Discogs-URLs werden wie bisher konvertiert.)
+
 ## v11.8.0 “Crate” (2026-08-26)
 
 - Neu: **Discogs-Links** werden automatisch in die passende Wikipedia-Vorlage umgewandelt: `discogs.com/release/…` → `{{Discogs Titel|ID|Titel|Interpret|Abruf=}}`, `…/master/…` → `{{Discogs Master|ID|Titel|Abruf=}}`, `…/artist/…` → `{{Discogs|ID|Name|Abruf=}}`, `…/label/…` → `{{Discogs Label|ID|Name|Abruf=}}`. Titel/Interpret/Name werden über die (CORS-fähige) Discogs-API geholt – ohne Schlüssel; Ergebnisse werden 365 Tage lokal gecacht, `Abruf` = heutiges Datum. Discogs-URLs innerhalb einer `{{cite …}}`-Vorlage (`|url=`) bleiben unangetastet.
