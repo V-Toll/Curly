@@ -4,6 +4,14 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v11.8.2 (2026-08-27)
+
+- Behoben: Eine Webquelle wurde schon dann komplett durch eine Discogs-Vorlage ersetzt, wenn *irgendwo* in ihr ein Discogs-Link stand – etwa in `zitat`/`kommentar` oder `archiv-url`. Dabei gingen Titel, Autor und die eigentliche URL verloren. Ersetzt wird jetzt nur noch, wenn der Discogs-Link der Wert von `url` ist (und zwar als ganzer Wert, nicht als Textbestandteil).
+- Behoben: Enthielten die von Discogs gelieferten Daten `|`, `=`, `{` oder `}`, entstand eine kaputte Vorlage (`|` begann einen zusätzlichen Parameter, `=` machte aus dem Positions- einen benannten Parameter). Solche Zeichen werden jetzt als HTML-Entity maskiert; enthält ein Wert ein `=`, werden die Positionsparameter nummeriert (`1=`, `2=`, `3=`).
+- Behoben: Discogs-URLs mit Query oder Fragment, aber ohne Titel-Teil (z. B. `…/master/68831?srsltid=…`) ließen den Rest als Textrumpf hinter der Vorlage stehen.
+- Behoben: Ein groß geschriebener Hostname (`Discogs.com`) wurde von der Vorprüfung übersprungen und gar nicht konvertiert.
+- Discogs-Ersetzungen erscheinen jetzt als Hinweis im Konvertierungs-Log – eine ersetzte `{{Internetquelle}}` soll nicht unbemerkt verschwinden.
+
 ## v11.8.1 (2026-08-27)
 
 - Steht ein Discogs-Link als `|url=` in einem `{{cite web}}` (Discogs `/release/`, `/master/`, `/artist/`, `/label/`), wird jetzt die passende `{{Discogs …}}`-Vorlage erzeugt statt `{{Internetquelle}}`. Ist die Discogs-API nicht erreichbar, bleibt es als Fallback bei `{{Internetquelle}}`. (Freistehende Discogs-URLs werden wie bisher konvertiert.)
