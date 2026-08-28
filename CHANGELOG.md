@@ -4,6 +4,12 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v11.9.0 “Fold” (2026-08-27)
+
+- Die Liste der unterstützten Konvertierungen über dem Eingabefeld ist jetzt **ein-/ausklappbar** und startet zugeklappt; der zuletzt gewählte Zustand wird gemerkt (`localStorage`). Sie belegte dauerhaft rund 180 px zwischen Einleitung und Eingabefeld – eingeklappt sind es 29 px, das Eingabefeld rückt rund 240 px nach oben.
+- Ausgeklappt ist die Liste flacher: eine Textzeile je Route, Quellen mit „·" getrennt und das Ziel fett, statt einer Kachel je Vorlage (146 px statt 180 px). Alle Vorlagen bleiben verlinkt.
+- Die Zusammenfassungszeile nennt die Anzahl der Routen; sie wird aus der Liste selbst gezählt.
+
 ## v11.8.2 (2026-08-27)
 
 - Behoben: Eine Webquelle wurde schon dann komplett durch eine Discogs-Vorlage ersetzt, wenn *irgendwo* in ihr ein Discogs-Link stand – etwa in `zitat`/`kommentar` oder `archiv-url`. Dabei gingen Titel, Autor und die eigentliche URL verloren. Ersetzt wird jetzt nur noch, wenn der Discogs-Link der Wert von `url` ist (und zwar als ganzer Wert, nicht als Textbestandteil).
