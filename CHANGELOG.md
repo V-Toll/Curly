@@ -4,6 +4,13 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v11.9.1 (2026-08-29)
+
+- Behoben: Bei `{{cite web}}`/`{{cite news}}`/`{{cite magazine}}` wurden `pages`/`page` verworfen – sie werden jetzt als `seiten` übernommen (mit Halbgeviertstrich, z. B. `12–15`), passend zur Parameterreihenfolge der Vorlage (`… datum, seiten, format, sprache …`). `{{cite press release}}` und `{{Citation}}` taten das bereits.
+- Behoben: Ein ausdrückliches `format=` der Quellvorlage wurde nicht gelesen; `format` entstand ausschließlich aus der Datei-Endung der URL. Jetzt hat der Wert aus der Quelle Vorrang, die Endung dient nur noch als Rückfall.
+- Neu: Bei Sonderformaten (PDF, DOC …) ergänzt Curly die ungefähre Dateigröße (`PDF; 2,6 MB`) – die Vorlagendoku verlangt sie, damit Nutzer mit langsamer oder teurer Verbindung den Abruf einschätzen können. Steht die Größe bereits in der Quelle, bleibt sie unverändert; andernfalls wird sie per Kopfanfrage (HEAD, `Content-Length`) an der zitierten Datei ermittelt, 1024-basiert mit Dezimalkomma formatiert und 30 Tage lokal zwischengespeichert. Server ohne CORS-Freigabe – darunter viele Behörden- und Verlagsserver – liefern sie nicht; dann entfällt die Angabe stillschweigend.
+- Neu: Options-Gruppe *Netzwerk* mit Schalter für diesen Abruf (Standard: an). Die README-Angabe zur Datensparsamkeit nennt jetzt die tatsächlich kontaktierten Dienste.
+
 ## v11.9.0 “Fold” (2026-08-27)
 
 - Die Liste der unterstützten Konvertierungen über dem Eingabefeld ist jetzt **ein-/ausklappbar** und startet zugeklappt; der zuletzt gewählte Zustand wird gemerkt (`localStorage`). Sie belegte dauerhaft rund 180 px zwischen Einleitung und Eingabefeld – eingeklappt sind es 29 px, das Eingabefeld rückt rund 240 px nach oben.

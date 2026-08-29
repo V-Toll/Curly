@@ -28,7 +28,7 @@
 - 🌍 **Wikidata & DeepL** – englische Wikilinks werden automatisch übersetzt, der Fließtext auf Wunsch per DeepL.
 - 🎨 **Rund 38 Farbthemen** inkl. Dunkelmodus – das Icon passt sich dem gewählten Theme an.
 - 🌐 **Zweisprachige Oberfläche** – Deutsch und Englisch, automatisch nach Systemsprache und in den Optionen umstellbar. (Konvertiert wird weiterhin ausschließlich Englisch → Deutsch, nicht umgekehrt.)
-- 🔒 **Datensparsam** – alles läuft lokal im Browser; nichts wird an Dritte gesendet.
+- 🔒 **Datensparsam** – die Konvertierung läuft vollständig lokal im Browser, es gibt keine Tracker und kein Konto. Abgerufen werden ausschließlich die Dienste, die eine Funktion benötigt: Wikidata und Wikipedia (Wikilinks), Crossref (DOI), Discogs (Discogs-Links), GitHub (Update-Prüfung), DeepL (nur auf Knopfdruck) sowie – für die Größenangabe in `format=` – eine Kopfanfrage an die zitierte Datei selbst; letztere ist in den Optionen unter *Netzwerk* abschaltbar.
 - 🔌 **Optionale Wikipedia-Bridge** – per Userscript direkt aus dem Bearbeitenfenster konvertieren (und übersetzen), ohne Kopieren. [Mehr dazu](#-optional-cite-konverter-bridge-userscript).
 
 ---
@@ -57,6 +57,7 @@
 - **Wikipedia-Redirects:** Automatische Verfolgung von Redirects – englische Wikilinks werden zum finalen Artikel aufgelöst und korrekt ins Deutsche übersetzt (z. B. `[[Eastern Band Cherokee]]` → `[[Eastern Band of Cherokee Indians]]`).
 - **Pressemitteilungen:** `{{Cite press release}}` wird zu `{{Internetquelle}}` (Autoren/Herausgeber/Interviewer zusammengeführt in `autor`, inkl. Wikilinks über `*-link`). Enthält die Vorlage eine Druck-/Publikations-ID (ISBN, DOI, ISSN …), wird stattdessen `{{Literatur}}` gebaut.
 - **Discogs-Links:** Ein Discogs-Link (Release/Master/Artist/Label) wird automatisch in die passende Vorlage (`{{Discogs Titel}}` / `{{Discogs Master}}` / `{{Discogs}}` / `{{Discogs Label}}`) umgewandelt – Titel/Interpret/Name kommen über die Discogs-API, `Abruf` = heute.
+- **Seitenangabe und Dateiformat:** `pages`/`page` werden als `seiten` übernommen, `format` als `format`. Bei Sonderformaten (PDF, DOC …) ergänzt Curly auf Wunsch die ungefähre Dateigröße (`PDF; 2,6 MB`) – gemäß Vorlagendoku, damit Nutzer mit langsamer Verbindung den Abruf einschätzen können. Steht die Größe schon in der Quelle, bleibt sie unverändert; ist der Server nicht CORS-freigegeben, entfällt sie stillschweigend.
 - **Tracklisten:** `{{Track listing}}` wird zu `{{Titelliste}}` (Alben/Singles) – inkl. Titel/Länge/Autor/Text/Musik/Notiz je Titel. Sammel-Credits (`all_writing` …) werden als Satz über die Tabelle gesetzt.
 - **Zitat-Konvertierung:** `{{blockquote}}` / `{{quote}}` werden zu `{{Zitat}}` – inklusive Sprach­erkennung, `{{lang|xx|…}}`-Entpackung, `multiline`-Umbrüchen und dem Einziehen eines direkt anschließenden `<ref>` in den `ref`-Parameter.
 - **DOI-Auflösung (Crossref):** DOIs werden erkannt und automatisch zu vollständigen `{{Literatur}}`-Angaben aufgelöst; bestehende `{{cite}}`-Vorlagen mit `doi=` lassen sich um fehlende Felder ergänzen – siehe [eigener Abschnitt](#-doi-auflösung-crossref).
@@ -194,7 +195,7 @@ Rund 38 abgestimmte Farbthemen mit eigenen Hell- und Dunkelmodus-Varianten. Das 
 
 ## 📦 Version & Changelog
 
-Aktuelle Version: **v11.9.0 „Fold"**. Den vollständigen Verlauf findest du in der [CHANGELOG.md](CHANGELOG.md) sowie direkt im Tool über das **📜**-Symbol.
+Aktuelle Version: **v11.9.1**. Den vollständigen Verlauf findest du in der [CHANGELOG.md](CHANGELOG.md) sowie direkt im Tool über das **📜**-Symbol.
 
 ## 📄 Lizenz
 

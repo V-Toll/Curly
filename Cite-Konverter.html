@@ -10,7 +10,7 @@
   <!-- Favicon: v9.2 „Sigil" – wird per Skript als eingebettetes SVG erzeugt und
        folgt dem gewählten Theme (siehe Skript am Seitenende). Keine externen Dateien. -->
   <link rel="icon" type="image/svg+xml" id="faviconSvg" />
-<title>Curly – der Cite-Konverter für Wikipedia – v11.9.0</title>
+<title>Curly – der Cite-Konverter für Wikipedia – v11.9.1</title>
 
 <style>
   html{min-height:100%}
@@ -859,7 +859,7 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
 <body class="theme-sunset">
   <div class="wrap">
     <div class="card" role="main" aria-labelledby="heading">
-      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.9.0</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
+      <h1 id="heading"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 100 100" role="img"><g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M44 20 C34 20 36 33 35 40 C34 47 30 50 24 50 C30 50 34 53 35 60 C36 67 34 80 44 80"/><path d="M56 20 C66 20 64 33 65 40 C66 47 70 50 76 50 C70 50 66 53 65 60 C64 67 66 80 56 80"/></g></svg></span><span class="title-text">Curly</span> <a href="#" id="versionBadge" class="badge" data-modal-open="changelogModal" aria-haspopup="dialog" title="Versionsverlauf">v11.9.1</a> <a href="#" id="updatePill" class="badge update-pill" data-modal-open="updateModal" aria-haspopup="dialog" title="Update verfügbar" hidden>⬆️ Update</a> <span class="header-actions"><button type="button" id="themeBtn" class="icon-btn" data-modal-open="themeModal" aria-haspopup="dialog" aria-label="Farbschema öffnen" title="Farbschema">🎨</button><button type="button" id="optionsBtn" class="icon-btn" data-modal-open="optionsModal" aria-haspopup="dialog" aria-label="Optionen öffnen" title="Optionen">⚙️</button><button type="button" id="changelogBtn" class="icon-btn" data-modal-open="changelogModal" aria-haspopup="dialog" aria-label="Versionsverlauf öffnen" title="Versionsverlauf">📜</button></span></h1>
       <p class="brand-tagline">der Cite-Konverter für Wikipedia</p>
       <p class="lead">Konvertiert englische Wikipedia-Zitationsvorlagen in die passenden deutschen Vorlagen – inklusive automatischer Wikidata-Übersetzung der Wikilinks, optionaler DeepL-Übersetzung des Fließtexts sowie Subreferenzierung und Syntax-Highlighting.</p>
       <details class="routes-box" id="routesBox">
@@ -1036,6 +1036,10 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
           <h3>Aktualisierung</h3>
           <label class="inline"><input type="checkbox" id="updateCheck" checked> <span class="info">Beim Start auf neue Version prüfen (GitHub)</span></label>
         </div>
+        <div class="opt-group">
+          <h3>Netzwerk</h3>
+          <label class="inline"><input type="checkbox" id="fileSizeLookup" checked> <span class="info">Dateigröße für <code>format=</code> automatisch ermitteln – sendet eine Kopfanfrage (HEAD) an die zitierte Datei. Ohne Erfolg bleibt die Angabe aus der Quelle erhalten.</span></label>
+        </div>
       </div>
     </div>
   </dialog>
@@ -1117,6 +1121,12 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
       <div class="modal-body cl-body">
         <p class="cl-hint">Die letzten Einträge – der vollständige Verlauf steht auf GitHub.</p>
         <ul class="cl-list">
+          <li><strong>v11.9.1 &middot; 2026-08-29</strong>
+            <ul>
+              <li>Behoben: Bei <code>{{cite web}}</code>/<code>{{cite news}}</code>/<code>{{cite magazine}}</code> gingen <code>pages</code>/<code>page</code> verloren &ndash; sie werden jetzt als <code>seiten</code> &uuml;bernommen. Ebenso wurde ein ausdr&uuml;ckliches <code>format=</code> der Quellvorlage ignoriert; es hat nun Vorrang vor der Ableitung aus der Datei-Endung.</li>
+              <li>Neu: Bei Sonderformaten (PDF, DOC &hellip;) erg&auml;nzt Curly die ungef&auml;hre Dateigr&ouml;&szlig;e (<code>PDF; 2,6&nbsp;MB</code>), wie es die Vorlagendoku vorsieht. Steht die Gr&ouml;&szlig;e schon in der Quelle, bleibt sie unver&auml;ndert; sonst wird sie per Kopfanfrage (HEAD) an der Datei ermittelt. Server ohne CORS-Freigabe liefern sie nicht &ndash; dann entf&auml;llt die Angabe stillschweigend. Abschaltbar in den Optionen unter <em>Netzwerk</em>.</li>
+            </ul>
+          </li>
           <li><strong>v11.9.0 &ldquo;Fold&rdquo; · 2026-08-27</strong>
             <ul>
               <li>Die Liste der unterst&uuml;tzten Konvertierungen &uuml;ber dem Eingabefeld ist jetzt <strong>ein-/ausklappbar</strong> und startet zugeklappt; der zuletzt gew&auml;hlte Zustand wird gemerkt. Das Eingabefeld r&uuml;ckt dadurch rund 240&nbsp;px nach oben.</li>
@@ -1130,11 +1140,6 @@ body.theme-midnight .progress-bar{background:linear-gradient(90deg,#7FC4DD,#9DD9
               <li>Behoben: Discogs-URLs mit Parametern, aber ohne Titel-Teil (z.&nbsp;B. <code>…/master/68831?srsltid=…</code>) ließen den Rest als Textrumpf hinter der Vorlage stehen.</li>
               <li>Behoben: Ein groß geschriebener Hostname (<code>Discogs.com</code>) wurde übersprungen.</li>
               <li>Discogs-Ersetzungen erscheinen jetzt als Hinweis im Konvertierungs-Log.</li>
-            </ul>
-          </li>
-          <li><strong>v11.8.1 · 2026-08-27</strong>
-            <ul>
-              <li>Steht ein Discogs-Link als <code>url</code> in einem <code>{{cite web}}</code> (Discogs <code>/release/</code>, <code>/master/</code>, <code>/artist/</code>, <code>/label/</code>), wird jetzt die passende <code>{{Discogs …}}</code>-Vorlage erzeugt statt <code>{{Internetquelle}}</code>. Ist die Discogs-API nicht erreichbar, bleibt es bei <code>{{Internetquelle}}</code>.</li>
             </ul>
           </li>
         </ul>
@@ -1894,8 +1899,21 @@ function convertCiteWebFamily(parsed, options){
   // continue building params
   if(params.url){
     finalParams['url'] = params.url;
-    const lower = String(params.url).toLowerCase();
-    const m = lower.match(/\.(pdf|pptx?|docx?|xlsx?)$/);
+  }
+
+  // v11.9.1: Seitenangabe wurde bisher verworfen. {{Internetquelle}} kennt dafuer
+  // |seiten= ("Seitenzahl, z. B. in PDF-Dokumenten"). Gleiche Quellen wie in
+  // convertCitation, damit beide Wege dasselbe Ergebnis liefern.
+  const seiten = params['pages'] || params['page'] || params['quote-pages'] || params['quote-page'] || '';
+  if(seiten) finalParams['seiten'] = normalizePages(String(seiten).trim());
+
+  // Ein explizites format= der Quellvorlage hat Vorrang; nur wenn es fehlt, wird
+  // das Format aus der Datei-Endung der URL abgeleitet (bisher ausschliesslich so).
+  if(params['format'] || params['archive-format']){
+    finalParams['format'] = String(params['format'] || params['archive-format']).trim();
+  }
+  if(!finalParams['format'] && params.url){
+    const m = String(params.url).toLowerCase().match(/\.(pdf|pptx?|docx?|xlsx?)$/);
     if(m){
       const map = { pdf:'PDF', ppt:'PPT', pptx:'PPTX', doc:'DOC', docx:'DOCX', xls:'XLS', xlsx:'XLSX' };
       finalParams['format'] = map[m[1]] || m[1].toUpperCase();
@@ -3228,6 +3246,16 @@ function highlightTemplateText(text){
         } catch(e) { console.error('Discogs processing failed:', e); }
       }
 
+      // v11.9.1: Dateigröße für |format= ergänzen (nur Sonderformate, nur wenn die
+      // Quelle keine Größe mitbringt). Scheitert der Abruf, bleibt alles wie es war.
+      var fsRes;
+      if (typeof window.processFileSizes === 'function') {
+        try {
+          fsRes = await window.processFileSizes(converted, {});
+          if (fsRes && typeof fsRes.text === 'string') converted = fsRes.text;
+        } catch(e) { console.error('File size lookup failed:', e); }
+      }
+
       document.getElementById('outputText').value = converted;
       updateOutputHighlight();
 
@@ -3240,7 +3268,10 @@ function highlightTemplateText(text){
           (typeof doiRes !== 'undefined' && doiRes && doiRes.touchedRefs) || [],
           // v11.8.1: Discogs-Ersetzungen als reine Info anzeigen – eine {{Internetquelle}}
           // wird dabei komplett ersetzt, das soll nicht unbemerkt passieren.
-          (typeof dcRes !== 'undefined' && dcRes && dcRes.notices) || []
+          [].concat(
+            (typeof dcRes !== 'undefined' && dcRes && dcRes.notices) || [],
+            (typeof fsRes !== 'undefined' && fsRes && fsRes.notices) || []
+          )
         );
       } catch(e) { console.error('Log update failed:', e); }
 
@@ -3852,12 +3883,14 @@ function setRedirectCache(key, value) { setCache(WIKIDATA_REDIRECT_CACHE_KEY, ke
 // v8.0.1: fetch mit Timeout (AbortController). Verhindert, dass eine einzelne hängende
 // API-Anfrage die komplette – sequentiell ablaufende – Wikidata-Verarbeitung blockiert.
 // Bei Abbruch greift automatisch das bestehende .catch() der jeweiligen Funktion.
-function fetchWithTimeout(url, timeoutMs) {
+function fetchWithTimeout(url, timeoutMs, init) {
   var ms = timeoutMs || 8000;
-  if (typeof AbortController === 'undefined') return fetch(url); // Fallback für alte Engines
+  var opts = {}; if (init) for (var k in init) opts[k] = init[k];   // z. B. { method:'HEAD' }
+  if (typeof AbortController === 'undefined') return fetch(url, opts); // Fallback für alte Engines
   var controller = new AbortController();
   var timer = setTimeout(function(){ controller.abort(); }, ms);
-  return fetch(url, { signal: controller.signal })
+  opts.signal = controller.signal;
+  return fetch(url, opts)
     .finally(function(){ clearTimeout(timer); });
 }
 
@@ -4171,7 +4204,7 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
     qa('.modal-close').forEach(function(b){ A(b, 'aria-label', 'Close', lang); });
 
     // Optionen – Gruppenüberschriften (Reihenfolge stabil)
-    var headEN = ['Conversion','Wikilinks (Wikidata)','DOI (Crossref)','Output','Translation (DeepL)','Appearance','Language','Update'];
+    var headEN = ['Conversion','Wikilinks (Wikidata)','DOI (Crossref)','Output','Translation (DeepL)','Appearance','Language','Update','Network'];
     qa('#optionsModal .opt-group > h3').forEach(function(h,i){ T(h, headEN[i], lang); });
 
     // Optionen – Info-Texte (HTML wg. <code>)
@@ -4188,6 +4221,7 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
     H(info('doiEnrich'), 'Enrich <code>{{cite}}</code> templates via Crossref (missing fields)', lang);
     H(info('autoCopy'), 'Copy the converted output straight to the clipboard', lang);
     H(info('updateCheck'), 'Check for a new version on startup (GitHub)', lang);
+    H(info('fileSizeLookup'), 'Determine the file size for <code>format=</code> automatically – sends a HEAD request to the cited file. If it fails, the value from the source is kept.', lang);
 
     // Optionen – weitere Beschriftungen
     T(q('label[for="doiFormat"]'), 'Target format for DOI', lang);
@@ -5025,6 +5059,134 @@ async function processWikidataLinks(text, keepDisplayNames, removeNonExisting) {
 
   // für Tests: erzwingt eine sofortige (ungedrosselte) Prüfung
   window.__ckCheckUpdate = function(){ try{ localStorage.removeItem(LS_TS); }catch(e){} check(); };
+})();
+</script>
+
+<script>
+/* v11.9.1 – Dateigroesse fuer |format= ermitteln.
+   Die Vorlage:Internetquelle verlangt bei Sonderformaten neben dem Format auch die
+   ungefaehre Groesse ("PDF; 2,6 MB"), damit Nutzer mit langsamer oder teurer
+   Verbindung abschaetzen koennen, ob sich der Abruf jetzt lohnt.
+
+   Vorrang: 1. Groesse steht bereits in |format= der Quelle -> unveraendert lassen.
+            2. sonst per HEAD-Request Content-Length lesen und anhaengen.
+   Der Abruf gelingt nur bei Servern mit CORS-Freigabe (viele Behoerden- und
+   Verlagsserver blockieren ihn); scheitert er, bleibt |format= still wie es war.
+   Abschaltbar in den Optionen (opt_fileSizeLookup), Ergebnisse 30 Tage gecacht. */
+(function(){
+  var SPECIAL = /^(PDF|MP3|DOC|DOCX|XLS|XLSX|PPT|PPTX|PNG|JPG|JPEG|GIF|SVG|ZIP|EPUB|RTF|TXT|CSV|MP4|WAV|OGG)\b/i;
+  // "PDF; 2,6 MB", "PDF (1.2 MB)", "PDF, 300 kB" – irgendeine Groessenangabe vorhanden?
+  var HAS_SIZE = /\d[\d.,\s]*\s*(?:[kKmMgG]i?)?[bB](?:ytes?)?\b/;
+
+  function enabled(){ var el=document.getElementById('fileSizeLookup'); return el ? el.checked : true; }
+
+  function cacheGet(u){
+    try{ var v=localStorage.getItem('ckSize:'+u); if(!v) return null;
+         var o=JSON.parse(v); if(o && o.t && (Date.now()-o.t) < 30*24*3600*1000) return o.n; }catch(e){}
+    return null;
+  }
+  function cacheSet(u,n){ try{ localStorage.setItem('ckSize:'+u, JSON.stringify({t:Date.now(), n:n})); }catch(e){} }
+
+  // 1024er-Basis mit deutschem Dezimalkomma: ab 1 MB eine Nachkommastelle, darunter ganze kB.
+  function human(bytes){
+    var n=Number(bytes);
+    if(!isFinite(n) || n<=0) return '';
+    if(n < 1024) return n+' Bytes';
+    var kb = n/1024;
+    if(kb < 1024) return Math.round(kb)+' kB';
+    var mb = kb/1024;
+    if(mb < 1024) return (Math.round(mb*10)/10).toString().replace('.', ',')+' MB';
+    return (Math.round(mb/1024*10)/10).toString().replace('.', ',')+' GB';
+  }
+
+  async function sizeOf(url){
+    var c=cacheGet(url); if(c!=null) return c;
+    var r = await fetchWithTimeout(url, 7000, { method:'HEAD' });
+    if(!r || !r.ok) throw new Error('HTTP '+(r&&r.status));
+    var len = r.headers.get('content-length');
+    if(!len) throw new Error('kein content-length');
+    var h = human(len);
+    if(!h) throw new Error('unbrauchbar');
+    cacheSet(url, h); return h;
+  }
+
+  // Top-Level-{{…}}-Bloecke (klammer- und wikilink-sicher) – wie in processDiscogs.
+  function findBlocks(s){
+    var res=[], dTpl=0, dLink=0, start=-1;
+    for(var i=0;i<s.length-1;i++){
+      var a=s[i], b=s[i+1];
+      if(a==='['&&b==='['){ dLink++; i++; continue; }
+      if(a===']'&&b===']'&&dLink>0){ dLink--; i++; continue; }
+      if(a==='{'&&b==='{'&&dLink===0){ if(dTpl===0) start=i; dTpl++; i++; continue; }
+      if(a==='}'&&b==='}'&&dTpl>0&&dLink===0){ dTpl--; i++; if(dTpl===0&&start!==-1){ res.push({start:start,end:i+1,text:s.slice(start,i+1)}); start=-1; } continue; }
+    }
+    return res;
+  }
+  // Position und Wert eines Top-Level-Parameters im Block.
+  function paramSpan(blockText, wanted){
+    var dT=0, dL=0, segStart=-1, out=null;
+    for(var i=2;i<blockText.length-1;i++){
+      var a=blockText[i], b=blockText[i+1];
+      if(a==='{'&&b==='{'){ dT++; i++; continue; }
+      if(a==='}'&&b==='}'&&dT>0){ dT--; i++; continue; }
+      if(a==='['&&b==='['){ dL++; i++; continue; }
+      if(a===']'&&b===']'&&dL>0){ dL--; i++; continue; }
+      if(a==='|'&&dT===0&&dL===0){
+        if(segStart>=0){ out=check(segStart,i); if(out) return out; }
+        segStart=i+1;
+      }
+    }
+    if(segStart>=0){ out=check(segStart, blockText.length-2); if(out) return out; }
+    return null;
+    function check(from,to){
+      var seg=blockText.slice(from,to), eq=seg.indexOf('=');
+      if(eq<0) return null;
+      if(seg.slice(0,eq).trim().toLowerCase()!==wanted) return null;
+      return { valStart: from+eq+1, valEnd: to, value: seg.slice(eq+1) };
+    }
+  }
+
+  window.processFileSizes = async function(text, options){
+    options=options||{}; var notices=[];
+    if(!text || !enabled() || text.indexOf('format=')<0) return { text:text, notices:notices };
+
+    var jobs=[];
+    findBlocks(text).forEach(function(blk){
+      var fmt=paramSpan(blk.text,'format'); if(!fmt) return;
+      var val=String(fmt.value);
+      if(!SPECIAL.test(val.trim())) return;      // kein Sonderformat
+      if(HAS_SIZE.test(val)) return;             // Groesse steht schon in der Quelle
+      var u=paramSpan(blk.text,'url'); if(!u) return;
+      var url=String(u.value).trim();
+      if(!/^https?:\/\//i.test(url)) return;
+      // Einfuegepunkt ans Ende des GETRIMMTEN Werts – sonst wuerde das Leerzeichen
+      // vor dem naechsten |Parameter verschluckt ("…MB|sprache=en").
+      var endeWert = fmt.valStart + val.replace(/\s+$/,'').length;
+      jobs.push({ insertAt: blk.start + endeWert, url: url, fmt: val.trim() });
+    });
+    if(!jobs.length) return { text:text, notices:notices };
+
+    var sizes = await Promise.all(jobs.map(function(j){
+      return sizeOf(j.url).catch(function(){ return null; });   // Fehler => still
+    }));
+
+    for(var i=jobs.length-1;i>=0;i--){          // von hinten, damit Indizes gueltig bleiben
+      var sz=sizes[i]; if(!sz) continue;
+      var at=jobs[i].insertAt;
+      text = text.slice(0,at) + '; ' + sz + text.slice(at);
+      notices.push('Dateigröße ermittelt: ' + jobs[i].fmt + '; ' + sz);
+    }
+    return { text:text, notices:notices };
+  };
+
+  // Schalterzustand merken (Standard: an).
+  (function initToggle(){
+    var el=document.getElementById('fileSizeLookup'); if(!el) return;
+    try{ if(localStorage.getItem('opt_fileSizeLookup')==='0') el.checked=false; }catch(e){}
+    el.addEventListener('change', function(){
+      try{ localStorage.setItem('opt_fileSizeLookup', el.checked?'1':'0'); }catch(e){}
+    });
+  })();
 })();
 </script>
 
