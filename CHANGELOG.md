@@ -4,6 +4,104 @@ Alle nennenswerten Änderungen am *Cite-Konverter für Wikipedia* – neueste Ve
 
 Benannte Minor-Versionen (mit Codename) sind Funktions-Releases, Patches betreffen Fehlerbehebungen und Robustheit. Mehrere kleine, am selben Tag entstandene Patches sind zu Bereichen zusammengefasst (z. B. `v4.0 – v4.0.10`).
 
+## v12.3.0 (2026-09-30)
+
+**Barrierefreiheit: Kontrast**
+
+Alle 38 Themes wurden in Hell- und Dunkelmodus, auf Desktop- und Mobilbreite automatisiert gemessen (Text gegen den tatsächlich gerenderten Hintergrund, einschließlich Verläufen und Glas-Effekt). Ziel: WCAG AA, also 4,5:1 für Text und 3:1 für den großen Titel. Nach den Änderungen meldet die Messung keine Unterschreitung mehr.
+
+- Buttons und Badges: Bei 26 Themes waren die Akzentverläufe zu hell für weiße bzw. zu dunkel für dunkle Schrift (u. a. Spice, Colonial Cobalt, Ancient Gild, Vintage Hearth). Die Verlaufsstopps wurden nur in der Helligkeit verschoben, Farbton und Sättigung bleiben.
+- Titel und Untertitel: Wo der Farbverlauf des Titels oder die Akzentfarbe des Untertitels auf dem Theme-Hintergrund zu schwach war, gibt es je Theme und Modus eine abgedunkelte bzw. aufgehellte Variante (gesammelt in einem Override-Block am Ende des Stylesheets).
+- Konvertierungs-Log: Die Etiketten („Info“, angewendete Hinweise) haben jetzt einen fast deckenden eigenen Grund, statt nur leicht getönt über dem Theme zu liegen. Auf dunklen Themes fiel der Kontrast vorher bis auf 2,6:1.
+- Theme-Kacheln im Dunkelmodus: heller Text lag auf halbtransparentem Weiß (etwa 3:1). Die Kacheln sind im Dunkelmodus jetzt dunkel hinterlegt.
+- Eingabe-Platzhalter (z. B. DeepL-Schlüssel), `<ref>`-Hervorhebung im Hellmodus, Datumszeilen im Versionsverlauf und der Routen-Zähler sind dunkler bzw. weniger transparent.
+
+## v12.2.0 (2026-09-30)
+
+**Neu**
+
+- Zufallsmodus im Farbschema: Die Kachel „🎲 Zufall“ (EN: „Random“) speichert `random` als Theme. Bei jedem Laden der Seite und bei jedem erneuten Klick auf die Kachel wird eines der 38 Themes zufällig angewendet. Das zuletzt gezogene Theme (`localStorage.themeRandomLast`) ist dabei ausgeschlossen, damit ein Neuladen sichtbar wechselt. Die Kachel zeigt das aktuell gezogene Theme an; Favicon, `theme-color` und Dunkelmodus folgen dem tatsächlich angewendeten Theme.
+- Ein unbekannter gespeicherter Theme-Name (z. B. aus einer älteren Version) fällt jetzt auf Sunset zurück, statt eine wirkungslose Klasse zu setzen.
+
+## v12.1.0 (2026-09-30)
+
+Fehlerbehebungen, Aufräumarbeiten und Barrierefreiheit aus einem Gesamt-Review von v12.0.0.
+
+**Behoben (hoch)**
+
+- Selbstschließende Refs (`<ref name=a/>`) galten als Öffnungs-Tag. Folge: Die nächste echte Referenz blieb unkonvertiert, im DOI-Pfad ging Fließtext verloren. Betroffen waren Hauptkonvertierung, DOI-Block und Konvertierungs-Log; alle erkennen `/>` jetzt einheitlich.
+- DOI-Auflösung ersetzte ganze Segmente: Ohne `<ref>` blieb vom gesamten Text nur `{{Literatur}}` übrig, und Begleittext in einer Ref („Müller 2019, S. 5; …“) verschwand. Eine vorlagenlose DOI wird jetzt nur noch aufgebaut, wenn das Segment im Wesentlichen aus der DOI besteht; sonst bleibt der Text unverändert.
+- Ein `{{Internetquelle}}` in der Eingabe wurde als `cite web` behandelt und dabei zerstört. deWP-Vorlagen bleiben jetzt unangetastet.
+- `last=… |last2=…` ergab nur den zweiten Autor (cite web, Citation). Alle Konverter nutzen jetzt einen gemeinsamen Personensammler; unnummerierte Angaben zählen als Nr. 1, `authorN` wird berücksichtigt.
+- `url-access=subscription` landete in cite web als `abruf=`. Entfällt.
+- Ausgeschriebene Sprachnamen wurden abgeschnitten (`German` → `ge`, `Dutch` → `du`). Englische und deutsche Sprachnamen werden jetzt vorab auf ISO-Codes abgebildet.
+- Zwischenspeicher in `localStorage` wuchsen unbegrenzt: Crossref-Antworten wurden vollständig gespeichert (bis etwa 70 KB je DOI), der Ablauf galt für den ganzen Block und verschob sich bei jedem Schreiben, und bei vollem Speicher cachte danach auch Wikidata nichts mehr. Neues Format mit Ablauf je Eintrag und Obergrenze; bei Platzmangel werden die ältesten Einträge verworfen. Crossref speichert nur noch die benötigten Felder, Dateigrößen und Discogs liegen in je einem begrenzten Block statt in einem Schlüssel pro URL. Alte Caches werden einmalig entfernt.
+
+**Behoben (mittel)**
+
+- Datumsformate: `Mar 7, 2007` ergab `2007-Mar-07`, `March 2007` und `2007-3-7` blieben roh. Kurzmonate (auch `Sept.`, deutsche Abkürzungen) werden erkannt, „Monat Jahr“ wird zu `JJJJ-MM`, Unbekanntes bleibt im Original.
+- `url-status=dead` ohne `archive-url` setzt jetzt `offline=1`. cite web, cite press release und `{{Citation}}` → `{{Internetquelle}}` nutzen eine gemeinsame Archivregel; im Citation-Pfad griff die Option „Archiv-Parameter entfernen“ vorher nicht, und `abruf` war immer heute.
+- Wikidata: HTTP-Status und API-Fehler (Ratelimit, `maxlag`) werden geprüft. Sie kamen mit HTTP 200 und wurden ein Jahr lang als „kein deutscher Artikel“ gespeichert.
+- Doppelklick auf Konvertieren startete parallele Läufe, `curly:converted` feuerte doppelt. Während eines Laufs ist der Button gesperrt (`aria-busy`, sichtbarer Wartezustand); das Ereignis trägt eine `runId`.
+- Discogs-Links in einem externen Link `[URL Text]` ergaben kaputten Wikitext. Der ganze Link wird ersetzt, der verworfene Linktext steht im Log.
+- Crossref-Werte mit `|`, `}}` oder `]]` brachen die Vorlage; sie werden jetzt entschärft.
+- Das Übernehmen abweichender Crossref-Felder baute die Ausgabe aus der Eingabe neu und verwarf dabei Discogs-, Dateigrößen- und Log-Umschaltungen. Es ersetzt jetzt nur die betroffene Vorlage in der aktuellen Ausgabe.
+- Vorlagen außerhalb von Refs blieben unkonvertiert, sobald eine Ref etwas geändert hatte, und je Ref wurde nur die erste Vorlage umgewandelt. Ein Durchlauf erfasst jetzt alle Vorlagen im Text.
+- `{{rp|page=5}}` ergab `details="S. page=5"`; benannte Werte werden ausgewertet, das angehängte Leerzeichen vor Satzzeichen entfällt.
+- Spracherkennung zählt Treffer je Sprache, statt die erste passende Regel gewinnen zu lassen („Die Hard review“ war Deutsch).
+- Kennungen (ISBN, OCLC, SSRN, HDL …) werden in allen Konvertern gleich abgebildet; cite encyclopedia überschrieb vorher `ID` mit jeder weiteren Kennung.
+
+**Behoben (niedrig)**
+
+- Präfixe „ISBN“ und `p.`/`pp.` werden entfernt; die Formaterkennung versteht `datei.PDF?x=1`; `publisher` geht neben `work` nicht mehr verloren; `cite_web` und abweichende Schreibweisen werden erkannt; cite press release setzt `abruf` nur noch mit Option oder `access-date`; der Dunkelmodus folgt dem System auch nach späterem Umschalten auf „automatisch“; Wikidata-Ersetzungen können sich nicht mehr verketten; DOI-Cache-Schlüssel sind kleingeschrieben; zwischen Discogs-Abrufen liegt eine kurze Pause.
+- `{{cite conference}}`: `chapter` wird nicht mehr zu `Kapitel` (laut enWP-Doku zeigt die Vorlage es nicht an), die Option „Abrufdatum auf heute“ wirkt, verworfene Archivangaben und `quote` stehen im Log, die Kennungen folgen cite book, erfolglose Crossref-Suchen werden nur noch 14 Tage gespeichert. Die Crossref-Anreicherung greift weiterhin nur, wenn Ein- und Ausgabe gleich viele Refs haben (sonst ist die Zuordnung Quelle ↔ Ausgabe nicht sicher); dann bleibt die einfache Konvertierung stehen.
+- `type=` wird in `{{Literatur}}` nicht mehr als `Typ` übernommen (einziger gültiger Wert ist `wl`), `quote` nicht mehr als das veraltete `Zitat`; beides steht als Hinweis im Log.
+
+**Sicherheit und Datenschutz**
+
+- DeepL-Key standardmäßig nur in `sessionStorage` (bis zum Schließen des Tabs); dauerhaft nur mit „Key dauerhaft im Browser speichern“.
+- Update-Links aus der GitHub-API werden nur übernommen, wenn sie auf `https://github.com/` zeigen.
+- Bridge 1.6.0: engeres `@include` (`file://*/Cite-Konverter*.html*`) und zusätzliche Prüfung, dass die Seite Curly ist; DeepL-Payload in `<d>…</d>` wie im Tool (behebt Abbrüche nach Platzhaltern); Zwischenablage über `GM_setClipboard`; Timeouts passend zur Konvertier- und Übersetzungsdauer; Ersetzung über `insertText`, damit Strg/Cmd+Z funktioniert; Version aus `GM_info` statt hart codiert; wartet nur auf das `curly:converted` des eigenen Laufs. `@namespace` bleibt bewusst beim alten Repo-Namen: Userscript-Manager erkennen Skripte an Name + Namespace, eine Änderung würde die Bridge als zweites Skript neben der alten installieren.
+- Crossref wird weiterhin ohne `mailto=` abgefragt (keine persönliche Adresse im Code); HEAD-Anfragen für die Dateigröße bleiben standardmäßig an und sind jetzt in README und Website dokumentiert.
+
+**Aufgeräumt**
+
+- Entfernt: ungenutzte Funktionen (`escapeHtml`, `refRegex`, zweites `looksEnglish`), der stillgelegte Fallback-Konverter, wirkungslose `setTimeout`-Nachbearbeiter, der tote Override von `buildInternetquelle`, die Builder-Kopien im DOI-Block (er nutzt jetzt die des Hauptskripts, einschließlich der Abruf-Regel), veraltete Kopfkommentare und etwa 70 CSS-Regeln für die nie gesetzte Klasse `body.dark` sowie weitere ungenutzte Selektoren.
+- Gemeinsame Helfer statt Kopien für Sprache, Kennungen, Personen und Archiv. Auch `{{Zitat}}` und `{{Titelliste}}` lesen ihre Parameterreihenfolge aus den zentralen Listen. Laufzeitmeldungen sind über eine kleine Funktion `ckT` zweisprachig.
+
+**Oberfläche und Barrierefreiheit**
+
+- Kein horizontaler Überlauf mehr auf schmalen Bildschirmen.
+- Kontrast: dunkle Schrift auf hellen Akzentfarben (u. a. Sunset, Vibrant Amber, Midnight), lesbare Titelverläufe für Midnight und Ancient Gild im Hellmodus, kräftigere Grautexte.
+- Englische Oberfläche vollständig: Log, DeepL-, Kopier- und Fortschrittsmeldungen.
+- Eingabe- und Ausgabefeld sind beschriftet, das versteckte Dunkelmodus-Auswahlfeld ist kein Tab-Stopp mehr, `aria-expanded`/`aria-pressed` für Sprachinfo und Theme-Kacheln, größere Trefferflächen für Versions- und Update-Abzeichen sowie die Routen-Links, die jetzt auch per Tastatur erreichbar sind.
+- Leere Eingabe erzeugt keinen irreführenden Log mehr, leere Ausgabe wird nicht als „kopiert“ gemeldet.
+- Optionen heißen „Anzeigetext von Wikilinks beibehalten“ und „Dunkelmodus“. DOI erscheint als eigene Route (jetzt 6, wie in README und Website).
+
+**Dokumentation**
+
+- Website: Datenschutzhinweis nennt die tatsächlich abgerufenen Dienste statt „nichts wird an Dritte gesendet“, DOI verlinkt auf doi.org, Tagungsbeiträge ohne DOI erwähnt.
+- README: exakt 38 Themes, reparierte Konvertierungstabelle, Ausnahme für `{{cite conference}}` beim Überschreiben, DeepL-Speicherort, Caching-Fristen, Option *Netzwerk*.
+
+## v12.0.0 “Symposium” (2026-09-30)
+
+- Neu: `{{cite conference}}` wird zu `{{Literatur}}`. Zuordnung: `book-title` (veröffentlichter Tagungsband) → `Sammelwerk`; ohne `book-title` wird `conference` zum `Sammelwerk`, bei beiden landet die Konferenz in `WerkErg`. `publisher` → `Verlag`, `publication-place` bzw. laut Doku ersatzweise `location` → `Ort`, `date`/`year` → `Datum`, `chapter` → `Kapitel`, `editor-*` → `Hrsg`, Kennungen (ISBN, ISSN, DOI, OCLC, arXiv …) wie bei den übrigen Konvertern. `url` bzw. ersatzweise `conference-url` → `Online`, `Abruf` nur mit Online-URL.
+- Neu: Crossref-Anreicherung für `{{cite conference}}`. Mit DOI wird sie direkt abgefragt, ohne DOI sucht Curly per Titel + Autor (`query.bibliographic`/`query.author`). Übernommen wird nur ein strikter Treffer: Titel nach Normalisierung gleich, mindestens ein Nachname gleich, Jahr höchstens ±1 entfernt. Dann ersetzen die Crossref-Werte `Sammelwerk`, `Verlag`, `Datum` und ergänzen `ISSN`, `ISBN`, `DOI` (sowie fehlende `Hrsg`/`Seiten`); Autor, Titel und Sprache bleiben aus der Vorlage, `Online`/`Abruf` werden nicht ergänzt. Gab die Vorlage nur ein Jahr an, wird auch aus Crossref nur das Jahr übernommen. Kein Treffer oder Netzfehler: die einfache Konvertierung bleibt stehen. Das Konvertierungs-Log bietet für jede angereicherte Referenz das Zurückschalten auf die einfache Fassung. Gesteuert über die bestehende Option „`{{cite}}`-Vorlagen per Crossref ergänzen“; Suchergebnisse werden zwischengespeichert, Netzfehler nicht.
+
+## v11.10.0 “Rulebook” (2026-09-30)
+
+- Behoben: `{{Literatur}}` bekam ein `Abruf=` auch ohne Online-Beleg, etwa bei `{{cite book}}` mit ISBN, aber ohne URL (und bei `{{cite journal}}`/`{{cite encyclopedia}}` sogar aus `url-access=subscription`). `Abruf` wird jetzt nur noch gesetzt, wenn `Online=` eine URL enthält; zusätzlich greift eine zentrale Prüfung beim Zusammenbau der Vorlage, damit kein Konverterpfad es durchreicht. `url-access` wird nicht mehr als Datum gelesen.
+- Behoben: `url-status=offline` wurde nicht als tote Quelle erkannt; `offline=1` entstand nur bei exakt `dead`. Jetzt führen `dead`, `offline`, `usurped` und `unfit` zu `offline=1` (mit `archiv-url`/`archiv-datum`), `live` und `online` gelten als erreichbar – bei aktiver Option „Archiv-Parameter entfernen" entfallen die Archivangaben dann wie bisher. Gilt für `{{cite web}}`-Familie, `{{Citation}}` und `{{cite press release}}`.
+- Behoben: Die Parameterreihenfolge im `{{Citation}}` → `{{Internetquelle}}`-Pfad stellte `offline` ans Ende; sie folgt jetzt wie alle übrigen Pfade der Kopiervorlage von Vorlage:Internetquelle (`… sprache, offline, archiv-url, archiv-datum, abruf …`).
+- Spracherkennung: Neuer Rückfall über die ISBN-Registrierungsgruppe (`978-0/1` → `en`, `978-2` → `fr`, `978-3` → `de` usw.), wenn Titel und Werk keine eindeutigen Wörter liefern. Die Wortliste für Englisch ist um häufige Funktionswörter erweitert (`on`, `by`, `over`, `how`, `new` …), dadurch erhalten auch kurze englische Titel wie „RimWorld sells over a million copies" `sprache=en`. `{{cite encyclopedia}}` nutzt jetzt dieselbe Erkennung wie die übrigen Konverter.
+- Geändert: Die Parameterreihenfolge von `{{Literatur}}` folgt jetzt exakt der vollständigen Kopiervorlage der Vorlagendoku. Verschoben wurden `NummerReihe` (vor `BandReihe`), `Kapitel`/`Seiten`/`Spalten`/`ArtikelNr`/`Fundstelle` (direkt nach den ISBN/ISSN-Angaben, vor `ZDB`), `LCCN` (vor `OCLC`) sowie `Originaljahr`/`Originalort` (vor `Originalsprache`).
+- Wikilinks → Deutsch (Wikidata): Hat der deutsche Artikel einen Klammerzusatz zur Begriffsklärung, bekommt der Link einen Anzeigetext ohne Zusatz, z. B. `[[Titel (Zusatz)|Titel]]` statt `[[Titel (Zusatz)]]`. Ein vorhandener Anzeigetext bleibt bei aktiver Option „Display-Namen beibehalten“ erhalten.
+- Behoben: Wikidata-Auflösung merkte sich Netzfehler ein Jahr lang als „kein deutscher Artikel“. Ein einziger Aussetzer (Timeout, offline, blockierte Anfrage) führte dazu, dass z. B. `[[Gamasutra]]` dauerhaft unverändert blieb bzw. seine Klammern verlor. Fehlgeschlagene Abrufe werden jetzt nicht mehr gespeichert, der Link bleibt in dem Fall unverändert, und die alten Zwischenspeicher werden einmalig verworfen.
+- Behoben: Nach dem Klick auf „Konvertieren“ schrieb ein zweiter, synchroner Handler sofort ein Ergebnis *ohne* Wikidata-, DOI-, Discogs- und Dateigrößen-Schritt ins Ausgabefeld; das vollständige Ergebnis folgte erst, wenn die Abrufe fertig waren. Die Bridge übernahm das Feld, sobald es 450 ms unverändert blieb, und bekam bei langsamer Wikidata-Antwort den Zwischenstand, also z. B. `werk=[[Gamasutra]]` statt `werk=[[Game Developer (Website)|Game Developer]]`. Der Zwischenstand entfällt jetzt. Während der Konvertierung trägt der Button `data-busy="1"`, am Ende feuert `curly:converted` auf `document`.
+- Bridge 1.5.0: wartet auf `curly:converted` statt auf ein ruhiges Ausgabefeld. Ältere Konverter-Versionen ohne dieses Ereignis werden wie bisher über das Feld beobachtet.
+- Intern: Die Parameterreihenfolgen standen für `{{Internetquelle}}` sechsmal und für `{{Literatur}}` dreimal im Code. Es gibt jetzt je eine zentrale Liste (`IQ_ORDER`, `LIT_ORDER`), die alle Konverterpfade nutzen. Die Ausgabe ändert sich dadurch nicht.
+- README und Website: Hinweis ergänzt, dass Curly regelbasiert arbeitet und keine KI bzw. kein Sprachmodell einsetzt.
+
 ## v11.9.1 (2026-08-29)
 
 - Behoben: Bei `{{cite web}}`/`{{cite news}}`/`{{cite magazine}}` wurden `pages`/`page` verworfen – sie werden jetzt als `seiten` übernommen (mit Halbgeviertstrich, z. B. `12–15`), passend zur Parameterreihenfolge der Vorlage (`… datum, seiten, format, sprache …`). `{{cite press release}}` und `{{Citation}}` taten das bereits.

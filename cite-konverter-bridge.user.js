@@ -1,18 +1,21 @@
 // ==UserScript==
 // @name         Cite-Konverter Bridge (Wikipedia ⇄ Cite-Konverter)
 // @namespace    https://github.com/V-Toll/Cite-Konverter-Wikipedia
-// @version      1.4.1
+// @homepageURL  https://github.com/V-Toll/Curly
+// @version      1.6.0
 // @description  Markierten Wikitext im Wikipedia-Bearbeitenfenster per Rechtsklick an einen offenen Cite-Konverter-Tab senden (konvertieren / konvertieren + übersetzen) und das Ergebnis an Ort und Stelle wieder einsetzen. Übersetzung läuft direkt über GM_xmlhttpRequest (ohne CORS-Erweiterung).
 // @author       V-Toll
 // @match        *://*.wikipedia.org/w/index.php*
 // @match        *://*.wikipedia.org/wiki/*
-// @include      file://*Cite-Konverter*
+// @include      file://*/Cite-Konverter*.html*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
 // @grant        GM_addValueChangeListener
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
+// @grant        GM_setClipboard
+// @grant        GM_info
 // @connect      api-free.deepl.com
 // @connect      api.deepl.com
 // @run-at       document-idle
@@ -25,7 +28,7 @@
 //     (b) den Cite-Konverter (lokale HTML-Datei oder gehostet).
 //  2) Für lokale Dateien (file://): in Violentmonkey bzw. in den Firefox/Zen-
 //     Add-on-Einstellungen den Zugriff auf Datei-URLs erlauben.
-//  3) Läuft der Konverter nicht unter file://*Cite-Konverter*, sondern z. B.
+//  3) Läuft der Konverter nicht unter file://…/Cite-Konverter*.html, sondern z. B.
 //     gehostet, oben eine passende Zeile ergänzen, etwa:
 //        // @match  https://deine-domain.example/pfad/Cite-Konverter*.html*
 //  4) Für „Konvertieren + Übersetzen" muss im Konverter der DeepL-API-Key in
@@ -47,7 +50,12 @@
   var REQ = 'CK_BRIDGE_REQ';   // Wikipedia → Konverter
   var RES = 'CK_BRIDGE_RES';   // Konverter → Wikipedia
   var ACK = 'CK_BRIDGE_ACK';   // Konverter → Wikipedia (Empfangsbestätigung)
-  var REQ_TIMEOUT = 65000;     // ms, bis „keine Antwort" gemeldet wird
+  // 1.6.0: Der Konverter darf bis zu 90 s konvertieren und danach bis zu 60 s
+  // übersetzen; die Wiki-Seite wartet deshalb länger als beides zusammen.
+  var CONVERT_TIMEOUT = 90000;
+  var TRANSLATE_TIMEOUT = 60000;
+  var REQ_TIMEOUT = CONVERT_TIMEOUT + TRANSLATE_TIMEOUT + 10000;
+  var VERSION = (typeof GM_info !== 'undefined' && GM_info && GM_info.script && GM_info.script.version) || '?';
 
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
 
@@ -70,10 +78,14 @@
     return t;
   }
 
+  // 1.6.0: IDs allein sind zu schwach (jede lokale Datei mit passendem Namen und
+  // gleichen IDs würde Wikitext empfangen). Zusätzlich muss sich die Seite als
+  // Curly ausweisen: Ereignis-Marker (ab v11.10.0) oder Titel.
   var isKonverter =
     !!document.getElementById('inputText') &&
     !!document.getElementById('convertBtn') &&
-    !!document.getElementById('outputText');
+    !!document.getElementById('outputText') &&
+    (!!document.documentElement.dataset.curlyEvents || /Curly|Cite-Konverter/.test(document.title));
 
   var isWikiEditor = !!document.getElementById('wpTextbox1');
 
@@ -106,6 +118,23 @@
         }, 150);
       });
     }
+    // 1.6.0: accept(detail) entscheidet, ob das Ereignis zum eigenen Lauf gehört
+    // (Konverter ab v12.1.0 liefert detail.runId). Ohne accept zählt jedes Ereignis.
+    function waitConverted(timeout, accept) {
+      return new Promise(function (resolve, reject) {
+        var timer = setTimeout(function () {
+          document.removeEventListener('curly:converted', onDone);
+          reject(new Error('Zeitüberschreitung beim Konvertieren'));
+        }, timeout);
+        function onDone(ev) {
+          if (accept && !accept(ev && ev.detail)) return;
+          clearTimeout(timer);
+          document.removeEventListener('curly:converted', onDone);
+          resolve();
+        }
+        document.addEventListener('curly:converted', onDone);
+      });
+    }
     // ── Übersetzung direkt aus dem Userscript via GM_xmlhttpRequest (umgeht CORS) ──
     // Schützt – wie der Konverter selbst – <ref>…</ref>, Wikilinks [[…]] sowie
     // Wiki-Kursiv/Fett (''…''/'''…''') und entfernt DeepL-Artefakte (Anführungszeichen
@@ -134,11 +163,14 @@
         var bare = built.payload.replace(/<x>\d+<\/x>/g, '').replace(/\s+/g, '');
         if (!bare) { resolve(text); return; } // nur ref/Wikilinks → nichts zu übersetzen
         var endpoint = /:fx$/.test(key) ? 'https://api-free.deepl.com/v2/translate' : 'https://api.deepl.com/v2/translate';
-        var data = 'text=' + encodeURIComponent(built.payload) +
+        // 1.6.0: Payload in <d>…</d> hüllen wie im Konverter seit v11.6.2; sonst ist
+        // Text direkt hinter einem führenden Platzhalter kein wohlgeformtes XML
+        // und DeepL bricht nach dem ersten Platzhalter ab.
+        var data = 'text=' + encodeURIComponent('<d>' + built.payload + '</d>') +
                    '&target_lang=' + encodeURIComponent(target) +
                    '&tag_handling=xml&ignore_tags=x&outline_detection=0';
         GM_xmlhttpRequest({
-          method: 'POST', url: endpoint, timeout: 60000,
+          method: 'POST', url: endpoint, timeout: TRANSLATE_TIMEOUT,
           headers: { 'Authorization': 'DeepL-Auth-Key ' + key, 'Content-Type': 'application/x-www-form-urlencoded' },
           data: data,
           onload: function (r) {
@@ -147,6 +179,7 @@
                 var j = JSON.parse(r.responseText);
                 var tr = j && j.translations && j.translations[0] && j.translations[0].text;
                 if (tr == null) { reject(new Error('Unerwartete Antwort von DeepL.')); return; }
+                var mWrap = tr.match(/<d\b[^>]*>([\s\S]*)<\/d>/i); if (mWrap) tr = mWrap[1];
                 resolve(restore(tr, built.spans));
               } catch (e) { reject(new Error('DeepL-Antwort nicht lesbar.')); }
             } else {
@@ -171,13 +204,32 @@
       var prev = output.value;
       input.value = req.text;
       input.dispatchEvent(new Event('input', { bubbles: true }));
-      convertBtn.click();
-      var converted = await waitStable(output, prev, 60000);
+      var converted;
+      if (document.documentElement.dataset.curlyEvents) {
+        // 1.5.0: Konverter ab v11.10.0 meldet das Ende selbst („curly:converted“).
+        // Das Feld zu beobachten reichte nicht: Wikidata/DOI antworten mitunter erst
+        // nach mehr als 450 ms Ruhe, dann kam der Zwischenstand zurück.
+        // 1.6.0: Läuft gerade ein Lauf (Klick im Tab), erst dessen Ende abwarten;
+        // danach nur das Ereignis mit der eigenen runId annehmen.
+        if (convertBtn.dataset.busy) { await waitConverted(CONVERT_TIMEOUT); input.value = req.text; }
+        var myRun = null;
+        var done = waitConverted(CONVERT_TIMEOUT, function (d) {
+          if (!d || d.runId == null || myRun == null) return true;
+          return String(d.runId) === myRun;
+        });
+        convertBtn.click();
+        myRun = convertBtn.dataset.runId || null;
+        await done;
+        converted = output.value;
+      } else {
+        convertBtn.click();
+        converted = await waitStable(output, prev, CONVERT_TIMEOUT);
+      }
 
       if (req.action === 'translate') {
         var keyEl = document.getElementById('deeplKey');
         var tgtEl = document.getElementById('deeplTarget');
-        var key = ((keyEl && keyEl.value) || localStorage.getItem('deeplKey') || '').trim();
+        var key = ((keyEl && keyEl.value) || localStorage.getItem('deeplKey') || sessionStorage.getItem('deeplKey') || '').trim();
         var target = (tgtEl && tgtEl.value) || localStorage.getItem('deeplTarget') || 'DE';
         if (!key) return { ok: false, text: converted, error: 'Kein DeepL-API-Key in den Optionen des Konverters hinterlegt.' };
         try {
@@ -214,10 +266,10 @@
     if (typeof GM_registerMenuCommand === 'function') {
       GM_registerMenuCommand('Bridge: Status (Konverter)', function () {
         var keyEl = document.getElementById('deeplKey');
-        var key = ((keyEl && keyEl.value) || localStorage.getItem('deeplKey') || '').trim();
+        var key = ((keyEl && keyEl.value) || localStorage.getItem('deeplKey') || sessionStorage.getItem('deeplKey') || '').trim();
         var tgtEl = document.getElementById('deeplTarget');
         var target = (tgtEl && tgtEl.value) || localStorage.getItem('deeplTarget') || 'DE';
-        alert('Cite-Konverter-Bridge 1.4.1 (Konverter-Seite)\n\n' +
+        alert('Cite-Konverter-Bridge ' + VERSION + ' (Konverter-Seite)\n\n' +
           'Bridge aktiv und lauschbereit: ja\n' +
           'Konvertieren-Button gefunden: ' + !!document.getElementById('convertBtn') + '\n' +
           'DeepL-Key hinterlegt: ' + (key ? 'ja (' + key.length + ' Zeichen, ' + (/:fx$/.test(key) ? 'Free' : 'Pro') + ')' : 'NEIN – bitte in den Optionen des Konverters eintragen') + '\n' +
@@ -237,7 +289,12 @@
     var lastSel = null;   // zuletzt gemerkte, nicht-leere Markierung
 
     function taUsable() { return !!ta && typeof ta.selectionStart === 'number'; }
-    function copyToClipboard(text) { try { navigator.clipboard.writeText(text); return true; } catch (e) { return false; } }
+    // 1.6.0: GM_setClipboard braucht keine Nutzeraktivierung. navigator.clipboard
+    // wird im Rückweg (Ereignis aus dem anderen Tab) von Firefox abgelehnt.
+    function copyToClipboard(text) {
+      try { if (typeof GM_setClipboard === 'function') { GM_setClipboard(text, 'text'); return true; } } catch (e) {}
+      try { navigator.clipboard.writeText(text).catch(function () {}); return true; } catch (e) { return false; }
+    }
 
     // wikEd-Editor – läuft in einem iframe (#wikEdFrame), eigenes Dokument/Selektion
     function wikEdFrameEl() { return document.getElementById('wikEdFrame'); }
@@ -341,9 +398,20 @@
           if (idx < 0) { copyToClipboard(res.text); toast('Markierter Bereich nicht mehr auffindbar – Ergebnis in die Zwischenablage kopiert.', 'err', 6000); return; }
           s = idx; e = idx + p.original.length;
         }
-        ta.value = val.substring(0, s) + res.text + val.substring(e);
+        // 1.6.0: über execCommand('insertText') einsetzen, damit Strg/Cmd+Z die
+        // Ersetzung rückgängig machen kann; ta.value= löscht den Undo-Verlauf.
+        var viaExec = false;
+        try {
+          ta.focus();
+          ta.setSelectionRange(s, e);
+          viaExec = document.execCommand('insertText', false, res.text) &&
+                    ta.value.substring(s, s + res.text.length) === res.text;
+        } catch (err) { viaExec = false; }
+        if (!viaExec) {
+          ta.value = val.substring(0, s) + res.text + val.substring(e);
+          ta.dispatchEvent(new Event('input', { bubbles: true }));
+        }
         ta.selectionStart = s; ta.selectionEnd = s + res.text.length;
-        ta.dispatchEvent(new Event('input', { bubbles: true }));
         ta.focus();
         toast('Eingesetzt ✓', 'ok', 2500);
         return;
@@ -451,7 +519,7 @@
         var ws = (window.getSelection && window.getSelection()) ? String(window.getSelection()) : '';
         var weSel = selFromWikEd();
         var ls = lastSel ? (lastSel.mode + ', ' + (lastSel.text ? lastSel.text.length : 0) + ' Zeichen') : '–';
-        alert('Cite-Konverter-Bridge 1.4.1\n\n' +
+        alert('Cite-Konverter-Bridge ' + VERSION + '\n\n' +
           '#wpTextbox1 vorhanden: ' + !!ta + '\n' +
           'aktives Element: ' + (ae ? (ae.tagName + (ae.id ? '#' + ae.id : '') + (ae.className ? '.' + String(ae.className).slice(0, 40) : '')) : '–') + '\n' +
           'wikEd-iframe (#wikEdFrame): ' + !!wikEdFrameEl() + ', erreichbar: ' + !!wikEdDoc() + '\n' +

@@ -24,10 +24,11 @@
 
 - 🗂️ **Eine einzige Datei** – herunterladen, im Browser öffnen, fertig. Kein Server, keine Installation, keine Tracker.
 - 🔄 **Viele Vorlagen** – von `{{cite web}}` bis `{{blockquote}}`, jeweils in die passende deutsche Entsprechung.
-- 🔗 **DOI-Auflösung** – aus einem DOI holt Curly per [Crossref](https://www.crossref.org/) automatisch alle Angaben und baut ein fertiges `{{Literatur}}`. [Mehr dazu](#-doi-auflösung-crossref).
+- 🔗 **DOI-Auflösung** – aus einem DOI holt Curly per [Crossref](https://www.crossref.org/) automatisch alle Angaben und baut ein fertiges `{{Literatur}}`; Tagungsbeiträge (`{{cite conference}}`) findet es auch ohne DOI über Titel und Autor. [Mehr dazu](#-doi-auflösung-crossref).
 - 🌍 **Wikidata & DeepL** – englische Wikilinks werden automatisch übersetzt, der Fließtext auf Wunsch per DeepL.
-- 🎨 **Rund 38 Farbthemen** inkl. Dunkelmodus – das Icon passt sich dem gewählten Theme an.
+- 🎨 **38 Farbthemen** inkl. Dunkelmodus und Zufallsmodus – das Icon passt sich dem gewählten Theme an.
 - 🌐 **Zweisprachige Oberfläche** – Deutsch und Englisch, automatisch nach Systemsprache und in den Optionen umstellbar. (Konvertiert wird weiterhin ausschließlich Englisch → Deutsch, nicht umgekehrt.)
+- ⚙️ **Regelbasiert statt KI** – Curly setzt kein Sprachmodell (LLM) und kein maschinelles Lernen ein. Jede Umwandlung folgt festen, im Quelltext nachlesbaren Regeln: dieselbe Eingabe ergibt immer dieselbe Ausgabe, und es werden keine Angaben hinzuerfunden. Auch die Spracherkennung ist eine Heuristik aus Wortlisten, ISBN-Gruppe und Domain-Endung, kein Modell. Einzige Ausnahme ist die optionale [DeepL-Übersetzung](#-übersetzung-mit-deepl-optional) des Fließtexts, die nur auf Knopfdruck läuft.
 - 🔒 **Datensparsam** – die Konvertierung läuft vollständig lokal im Browser, es gibt keine Tracker und kein Konto. Abgerufen werden ausschließlich die Dienste, die eine Funktion benötigt: Wikidata und Wikipedia (Wikilinks), Crossref (DOI), Discogs (Discogs-Links), GitHub (Update-Prüfung), DeepL (nur auf Knopfdruck) sowie – für die Größenangabe in `format=` – eine Kopfanfrage an die zitierte Datei selbst; letztere ist in den Optionen unter *Netzwerk* abschaltbar.
 - 🔌 **Optionale Wikipedia-Bridge** – per Userscript direkt aus dem Bearbeitenfenster konvertieren (und übersetzen), ohne Kopieren. [Mehr dazu](#-optional-cite-konverter-bridge-userscript).
 
@@ -38,12 +39,11 @@
 | Englische Vorlage | | Deutsche Vorlage |
 |---|:---:|---|
 | [`{{cite web}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_web) · [`{{cite news}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_news) · [`{{cite magazine}}`](https://en.wikipedia.org/wiki/Template:Cite_magazine) · [`{{cite press release}}`](https://en.wikipedia.org/wiki/Template:Cite_press_release) | → | [`{{Internetquelle}}`](https://de.wikipedia.org/wiki/Vorlage:Internetquelle) |
-| [`{{cite book}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_book) · [`{{cite journal}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_journal) · [`{{cite encyclopedia}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_encyclopedia) · [`{{Citation}}`](https://en.wikipedia.org/wiki/Template:Citation) | → | [`{{Literatur}}`](https://de.wikipedia.org/wiki/Vorlage:Literatur) |
+| [`{{cite book}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_book) · [`{{cite journal}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_journal) · [`{{cite conference}}`](https://en.wikipedia.org/wiki/Template:Cite_conference) · [`{{cite encyclopedia}}`](https://de.wikipedia.org/wiki/Vorlage:Cite_encyclopedia) · [`{{Citation}}`](https://en.wikipedia.org/wiki/Template:Citation) | → | [`{{Literatur}}`](https://de.wikipedia.org/wiki/Vorlage:Literatur) |
 | [`{{blockquote}}`](https://en.wikipedia.org/wiki/Template:Blockquote) · [`{{quote}}`](https://en.wikipedia.org/wiki/Template:Blockquote) | → | [`{{Zitat}}`](https://de.wikipedia.org/wiki/Vorlage:Zitat) |
 | [`{{track listing}}`](https://en.wikipedia.org/wiki/Template:Track_listing) | → | [`{{Titelliste}}`](https://de.wikipedia.org/wiki/Vorlage:Titelliste) |
 | [Discogs](https://www.discogs.com/)-Link (`release` · `master` · `artist` · `label`) | → | [`{{Discogs Titel}}`](https://de.wikipedia.org/wiki/Vorlage:Discogs_Titel) · [`{{Discogs Master}}`](https://de.wikipedia.org/wiki/Vorlage:Discogs_Master) · [`{{Discogs}}`](https://de.wikipedia.org/wiki/Vorlage:Discogs) · [`{{Discogs Label}}`](https://de.wikipedia.org/wiki/Vorlage:Discogs_Label) |
-
-| DOI (`doi.org`-Link · Verlags-URL · reine `10.xxxx/…`-Nummer) | → | [`{{Literatur}}`](https://de.wikipedia.org/wiki/Vorlage:Literatur) bzw. [`{{Internetquelle}}`](https://de.wikipedia.org/wiki/Vorlage:Internetquelle) (über [Crossref](https://www.crossref.org/)) |
+| [DOI](https://www.doi.org/) (`doi.org`-Link · Verlags-URL · reine `10.xxxx/…`-Nummer) | → | [`{{Literatur}}`](https://de.wikipedia.org/wiki/Vorlage:Literatur) bzw. [`{{Internetquelle}}`](https://de.wikipedia.org/wiki/Vorlage:Internetquelle) (über [Crossref](https://www.crossref.org/)) |
 
 > [!NOTE]
 > [`{{Citation}}`](https://en.wikipedia.org/wiki/Template:Citation) ohne Seitenangabe und mit URL wird alternativ in [`{{Internetquelle}}`](https://de.wikipedia.org/wiki/Vorlage:Internetquelle) konvertiert.
@@ -53,7 +53,7 @@
 ## 🧠 Intelligente Funktionen
 
 - **Automatische Subreferenzierung:** `{{rp|...}}`-Tags werden automatisch in das `details=`-Attribut konvertiert (z. B. `{{rp|10–20}}` → `details="S. 10–20"`). Mehrere `{{rp}}`-Tags werden zusammengeführt.
-- **Wikidata-Integration:** Englische Wikilinks werden automatisch ins Deutsche übersetzt (z. B. `[[Yellowstone National Park]]` → `[[Yellowstone-Nationalpark]]`). Display-Namen bleiben optional erhalten, fehlende deutsche Artikel werden intelligent behandelt. Die Titel werden dabei gebündelt abgefragt, sodass auch viele Wikilinks zügig übersetzt werden.
+- **Wikidata-Integration:** Englische Wikilinks werden automatisch ins Deutsche übersetzt (z. B. `[[Yellowstone National Park]]` → `[[Yellowstone-Nationalpark]]`). Der Anzeigetext bleibt optional erhalten, fehlende deutsche Artikel werden intelligent behandelt. Die Titel werden dabei gebündelt abgefragt, sodass auch viele Wikilinks zügig übersetzt werden.
 - **Wikipedia-Redirects:** Automatische Verfolgung von Redirects – englische Wikilinks werden zum finalen Artikel aufgelöst und korrekt ins Deutsche übersetzt (z. B. `[[Eastern Band Cherokee]]` → `[[Eastern Band of Cherokee Indians]]`).
 - **Pressemitteilungen:** `{{Cite press release}}` wird zu `{{Internetquelle}}` (Autoren/Herausgeber/Interviewer zusammengeführt in `autor`, inkl. Wikilinks über `*-link`). Enthält die Vorlage eine Druck-/Publikations-ID (ISBN, DOI, ISSN …), wird stattdessen `{{Literatur}}` gebaut.
 - **Discogs-Links:** Ein Discogs-Link (Release/Master/Artist/Label) wird automatisch in die passende Vorlage (`{{Discogs Titel}}` / `{{Discogs Master}}` / `{{Discogs}}` / `{{Discogs Label}}`) umgewandelt – Titel/Interpret/Name kommen über die Discogs-API, `Abruf` = heute.
@@ -72,7 +72,7 @@
 
 1. Lade die Datei [`Cite-Konverter.html`](https://github.com/V-Toll/Curly/releases/latest) herunter und öffne sie im Browser deiner Wahl.
 2. Füge im ersten Eingabefeld den zu konvertierenden Code ein – gern inkl. `<ref>` bzw. `<ref name="…">`.
-3. Klicke auf **🔀 Konvertieren**. Im Ausgabefeld erscheint der fertig formatierte Einzelnachweis (`{{Internetquelle}}`, `{{Literatur}}` bzw. `{{Zitat}}`).
+3. Klicke auf **🔀 Konvertieren**. Im Ausgabefeld erscheint der fertig formatierte Einzelnachweis (`{{Internetquelle}}`, `{{Literatur}}`, `{{Zitat}}`, `{{Titelliste}}` oder eine Discogs-Vorlage).
 4. Kopieren, auf der Wikipedia-Seite einfügen – und vor dem Speichern bitte noch einmal manuell prüfen. ✅
 
 > [!TIP]
@@ -91,14 +91,15 @@
 - **Subreferenzierung konvertieren** – `{{rp|...}}` → `details=`.
 - **Konvertierte Ausgabe direkt in die Zwischenablage kopieren.**
 - **Wikilinks → Deutsch (Wikidata)** – optionale automatische Übersetzung englischer Wikilinks.
-- **Display-Namen beibehalten** – behält bei übersetzten Wikilinks den originalen Anzeigenamen bei (standardmäßig aktiv).
+- **Anzeigetext von Wikilinks beibehalten** – behält bei übersetzten Wikilinks den originalen Anzeigetext bei (standardmäßig aktiv).
 - **Klammern entfernen bei fehlendem deutschen Artikel** – entfernt eckige Klammern, wenn kein deutscher Artikel existiert (standardmäßig aktiv).
 - **Vorlagenlose DOIs auflösen** – baut aus einem DOI ohne Vorlage automatisch `{{Literatur}}` (standardmäßig aktiv).
 - **`{{cite}}`-Vorlagen per Crossref ergänzen** – füllt fehlende Felder aus Crossref; abweichende Felder werden aufgelistet (standardmäßig aktiv).
 - **Zielformat bei DOI** – *Automatisch* (nach Crossref-Typ), *immer `{{Literatur}}`* oder *immer `{{Internetquelle}}`*.
 - **DeepL-API-Key & Zielsprache** – optional, für die DeepL-Übersetzung (siehe unten).
-- **Wahl aus rund 38 Farbthemen.**
-- **Darkmode** – automatisch, erzwingen oder abschalten.
+- **Wahl aus 38 Farbthemen.**
+- **Dunkelmodus** – automatisch, erzwingen oder abschalten.
+- **Dateigröße für `format=` automatisch ermitteln** (Bereich *Netzwerk*) – sendet eine Kopfanfrage (HEAD) an die zitierte Datei (standardmäßig aktiv, abschaltbar).
 - **Sprache / Language** – Oberfläche auf Deutsch oder Englisch, oder *Automatisch* nach Systemsprache.
 - **Beim Start auf neue Version prüfen (GitHub)** – blendet ein Update-Abzeichen ein, wenn eine neuere Version vorliegt (standardmäßig aktiv).
 
@@ -115,7 +116,7 @@ Ab Version 9.0 kann die konvertierte Ausgabe optional per [DeepL](https://www.de
 
 **Einrichtung**
 
-1. In den Optionen (⚙️) einen DeepL-API-Key eintragen (kostenloser Key mit `:fx`-Endung oder Pro-Key). Der Schlüssel wird ausschließlich lokal im Browser (`localStorage`) gespeichert, bleibt nach dem Schließen erhalten und wird **nur direkt an DeepL** gesendet.
+1. In den Optionen (⚙️) einen DeepL-API-Key eintragen (kostenloser Key mit `:fx`-Endung oder Pro-Key). Der Schlüssel bleibt standardmäßig nur bis zum Schließen des Tabs im Browser (`sessionStorage`); dauerhaft (`localStorage`) nur, wenn du *Key dauerhaft im Browser speichern* anhakst. Gesendet wird er **nur direkt an DeepL**. Achtung: Lokal geöffnete Dateien teilen sich in manchen Browsern einen Speicherbereich.
 2. Optional die Zielsprache wählen (Standard: Deutsch).
 3. Auf **🌐 Übersetzen (DeepL)** klicken – das Ergebnis ersetzt die Ausgabe.
 
@@ -145,7 +146,7 @@ wird automatisch:
 **Print vs. Online:** Klassische Publikationen (Journalartikel, Bücher, Buchkapitel, Tagungsbände) werden zu `{{Literatur}}`. Web-native Inhalte – Preprints (`posted-content`), Datensätze, Reports, Lexikoneinträge u. a. – werden stattdessen zu [`{{Internetquelle}}`](https://de.wikipedia.org/wiki/Vorlage:Internetquelle) (mit der echten Artikel-URL, sonst dem `doi.org`-Link). Es sind **zwei Optionen** verfügbar (beide standardmäßig aktiv, werden lokal gespeichert):
 
 - **Vorlagenlose DOIs auflösen** – eine Referenz mit DOI, aber ohne `{{cite}}`-Vorlage, wird zu `{{Literatur}}` aufgebaut.
-- **`{{cite}}`-Vorlagen per Crossref ergänzen** – eine `{{cite…|doi=}}`-Vorlage wird um **fehlende** Felder ergänzt. Bereits vorhandene Werte werden **nicht** überschrieben; weicht ein Feld von Crossref ab, wird der Unterschied unter der Ausgabe aufgelistet und lässt sich per Häkchen gezielt übernehmen.
+- **`{{cite}}`-Vorlagen per Crossref ergänzen** – eine `{{cite…|doi=}}`-Vorlage wird um **fehlende** Felder ergänzt. Bereits vorhandene Werte werden **nicht** überschrieben (Ausnahme: bei `{{cite conference}}` ersetzt Crossref `Sammelwerk`, `Verlag` und `Datum`, weil die enWP-Angaben dort oft unvollständig sind; der Log bietet die ursprüngliche Fassung zum Zurückschalten an); weicht ein Feld von Crossref ab, wird der Unterschied unter der Ausgabe aufgelistet und lässt sich per Häkchen gezielt übernehmen.
 
 Über die Option **Zielformat bei DOI** lässt sich die automatische Zuordnung übersteuern – *Automatisch* (nach Crossref-Typ), *immer `{{Literatur}}`* oder *immer `{{Internetquelle}}`*.
 
@@ -183,19 +184,19 @@ Die **Cite-Konverter Bridge** verbindet die Wikipedia-Bearbeitenseite direkt mit
 
 ## ⚡ Performance
 
-Der Konverter nutzt intelligentes Caching (365 Tage für Wikidata-Übersetzungen und Crossref-DOI-Daten, separater Cache für Redirects), gebündelte API-Abfragen und Rate Limiting für optimale Performance und einen schonenden Umgang mit Wikipedia-/Wikidata-/Crossref-Ressourcen.
+Der Konverter nutzt lokales Caching (365 Tage für Wikidata-Übersetzungen, Redirects, Crossref-DOI-Daten und Discogs-Angaben, 30 Tage für Dateigrößen, 14 Tage für erfolglose Crossref-Suchen nach Tagungsbeiträgen; Netzfehler werden nicht gespeichert, ältere Einträge räumt Curly bei Platzmangel selbst auf), gebündelte API-Abfragen und Rate Limiting für optimale Performance und einen schonenden Umgang mit Wikipedia-/Wikidata-/Crossref-Ressourcen.
 
 ---
 
 ## 🎨 Design & Themes
 
-Rund 38 abgestimmte Farbthemen mit eigenen Hell- und Dunkelmodus-Varianten. Das Icon links vom Titel sowie das Browser-Tab-Favicon werden als eingebettetes SVG erzeugt und übernehmen automatisch die Akzentfarben des gewählten Themes – ganz ohne externe Bilddateien.
+38 abgestimmte Farbthemen mit eigenen Hell- und Dunkelmodus-Varianten. Mit **🎲 Zufall** zieht Curly bei jedem Laden der Seite eines davon (nie zweimal hintereinander dasselbe); die Kachel zeigt an, welches gerade aktiv ist. Das Icon links vom Titel sowie das Browser-Tab-Favicon werden als eingebettetes SVG erzeugt und übernehmen automatisch die Akzentfarben des gewählten Themes – ganz ohne externe Bilddateien. Alle Themes sind auf ausreichenden Kontrast geprüft: Texte erreichen hell wie dunkel mindestens WCAG AA.
 
 ---
 
 ## 📦 Version & Changelog
 
-Aktuelle Version: **v11.9.1**. Den vollständigen Verlauf findest du in der [CHANGELOG.md](CHANGELOG.md) sowie direkt im Tool über das **📜**-Symbol.
+Aktuelle Version: **v12.3.0**. Den vollständigen Verlauf findest du in der [CHANGELOG.md](CHANGELOG.md) sowie direkt im Tool über das **📜**-Symbol.
 
 ## 📄 Lizenz
 

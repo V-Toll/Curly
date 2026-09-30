@@ -87,6 +87,8 @@
     background:var(--grad-soft);border:1px solid var(--line)}
   .feature h3{font-size:1.15rem;margin:0 0 6px}
   .feature p{margin:0;color:var(--muted);font-size:.97rem}
+  .no-ai{max-width:760px;margin:26px auto 0;text-align:center;color:var(--muted);font-size:.95rem}
+  .no-ai b{color:var(--ink)}
 
   .alt{background:var(--grad-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 
@@ -169,7 +171,7 @@
           <span class="dst"><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Internetquelle" target="_blank" rel="noopener">Internetquelle</a></span>
         </div>
         <div class="route">
-          <span class="src"><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_book" target="_blank" rel="noopener">cite book</a><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_journal" target="_blank" rel="noopener">cite journal</a><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_encyclopedia" target="_blank" rel="noopener">cite encyclopedia</a><a class="pill" href="https://en.wikipedia.org/wiki/Template:Citation" target="_blank" rel="noopener">Citation</a></span>
+          <span class="src"><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_book" target="_blank" rel="noopener">cite book</a><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_journal" target="_blank" rel="noopener">cite journal</a><a class="pill" href="https://en.wikipedia.org/wiki/Template:Cite_conference" target="_blank" rel="noopener">cite conference</a><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:Cite_encyclopedia" target="_blank" rel="noopener">cite encyclopedia</a><a class="pill" href="https://en.wikipedia.org/wiki/Template:Citation" target="_blank" rel="noopener">Citation</a></span>
           <span class="arrow">→</span>
           <span class="dst"><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Literatur" target="_blank" rel="noopener">Literatur</a></span>
         </div>
@@ -179,7 +181,7 @@
           <span class="dst"><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Zitat" target="_blank" rel="noopener">Zitat</a></span>
         </div>
         <div class="route">
-          <span class="src"><a class="pill" href="https://de.wikipedia.org/wiki/Vorlage:DOI" target="_blank" rel="noopener">DOI</a></span>
+          <span class="src"><a class="pill" href="https://www.doi.org/" target="_blank" rel="noopener">DOI</a></span>
           <span class="arrow">→</span>
           <span class="dst"><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Literatur" target="_blank" rel="noopener">Literatur</a><a class="pill out" href="https://de.wikipedia.org/wiki/Vorlage:Internetquelle" target="_blank" rel="noopener">Internetquelle</a></span>
         </div>
@@ -206,13 +208,14 @@
         <p>Curly übernimmt die Feinarbeit, die sonst von Hand nötig wäre.</p>
       </div>
       <div class="grid">
-        <div class="feature"><div class="ico">🔗</div><h3>DOI-Auflösung</h3><p>Aus einem DOI holt Curly per Crossref automatisch alle Angaben und baut ein fertiges <code>{{Literatur}}</code> bzw. <code>{{Internetquelle}}</code>.</p></div>
+        <div class="feature"><div class="ico">🔗</div><h3>DOI-Auflösung</h3><p>Aus einem DOI holt Curly per Crossref automatisch alle Angaben und baut ein fertiges <code>{{Literatur}}</code> bzw. <code>{{Internetquelle}}</code>. Tagungsbeiträge (<code>{{cite conference}}</code>) findet Curly auch ohne DOI über Titel und Autor.</p></div>
         <div class="feature"><div class="ico">🌍</div><h3>Wikilinks übersetzt</h3><p>Englische Wikilinks werden über Wikidata automatisch ins Deutsche übersetzt – inklusive Redirect-Auflösung.</p></div>
         <div class="feature"><div class="ico">📝</div><h3>DeepL-Übersetzung</h3><p>Auf Wunsch übersetzt Curly den Fließtext per DeepL – <code>&lt;ref&gt;</code> und Wikilinks bleiben unangetastet.</p></div>
-        <div class="feature"><div class="ico">🎨</div><h3>38 Farbthemen</h3><p>Vom hellen Sunset bis zum tiefdunklen „Midnight" – inklusive Dunkelmodus. Das Icon passt sich dem Theme an.</p></div>
+        <div class="feature"><div class="ico">🎨</div><h3>38 Farbthemen</h3><p>Vom hellen Sunset bis zum tiefdunklen „Midnight" – inklusive Dunkelmodus und Zufallsmodus. Das Icon passt sich dem Theme an.</p></div>
         <div class="feature"><div class="ico">🌐</div><h3>Zweisprachige Oberfläche</h3><p>Bedienung auf Deutsch oder Englisch, automatisch nach Systemsprache. (Konvertiert wird weiterhin nur Englisch → Deutsch.)</p></div>
-        <div class="feature"><div class="ico">🔒</div><h3>Datensparsam</h3><p>Alles läuft lokal im Browser. Kein Server, keine Tracker – nichts wird an Dritte gesendet.</p></div>
+        <div class="feature"><div class="ico">🔒</div><h3>Datensparsam</h3><p>Die Konvertierung läuft lokal im Browser, ohne Konto und ohne Tracker. Abgerufen werden nur die Dienste, die eine Funktion braucht: Wikidata/Wikipedia, Crossref, Discogs, GitHub (Update-Prüfung), DeepL (nur auf Knopfdruck) und für die Dateigröße eine Kopfanfrage an die zitierte Datei (abschaltbar).</p></div>
       </div>
+      <p class="no-ai"><b>Regelbasiert statt KI.</b> Curly setzt kein Sprachmodell und kein maschinelles Lernen ein. Jede Umwandlung folgt festen, im Quelltext nachlesbaren Regeln – dieselbe Eingabe ergibt immer dieselbe Ausgabe. (Einzige Ausnahme ist die optionale DeepL-Übersetzung, die nur auf Knopfdruck läuft.)</p>
     </div>
   </section>
 
